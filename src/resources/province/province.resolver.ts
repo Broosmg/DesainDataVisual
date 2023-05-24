@@ -3,6 +3,7 @@ import { ProvinceService } from './province.service';
 import { Province } from './entities/province.entity';
 import { CreateProvinceInput } from './dto/create-province.input';
 import { UpdateProvinceInput } from './dto/update-province.input';
+import { GetProvinceArgs } from './dto/get-province.args';
 
 @Resolver(() => Province)
 export class ProvinceResolver {
@@ -16,8 +17,8 @@ export class ProvinceResolver {
   }
 
   @Query(() => [Province], { name: 'provinces' })
-  findAll() {
-    return this.provinceService.findAll();
+  findAll(@Args() getProvinceArgs: GetProvinceArgs) {
+    return this.provinceService.findAll(getProvinceArgs);
   }
 
   @Query(() => Province, { name: 'province' })
