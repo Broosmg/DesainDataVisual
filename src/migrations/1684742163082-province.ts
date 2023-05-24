@@ -9,7 +9,6 @@ export class Province1684742163082 implements MigrationInterface {
           {
             name: 'province_id',
             type: 'uuid',
-            default: 'uuid_generate_v4()',
             isPrimary: true,
           },
           {

@@ -1,26 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCityInput } from './dto/create-city.input';
 import { UpdateCityInput } from './dto/update-city.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { City } from './entities/city.entity';
+import { GetCityArgs } from './dto/get-city.args';
 
 @Injectable()
 export class CityService {
+  constructor(
+    @InjectRepository(City)
+    private readonly cityRepository: Repository<City>,
+  ) {}
+
   create(createCityInput: CreateCityInput) {
-    return 'This action adds a new city';
+    return this.cityRepository.save(
+      this.cityRepository.create(createCityInput),
+    );
   }
 
-  findAll() {
-    return `This action returns all city`;
+  findAll(getCityArgs: GetCityArgs) {
+    const query = this.cityRepository.createQueryBuilder('entity');
+
+    if (getCityArgs.query) {
+      query.where(`entity.city_name LIKE '%${getCityArgs.query}%'`);
+    }
+
+    if (getCityArgs.startAt) {
+      query.where(`entity.created_at >= '${getCityArgs.startAt}'`);
+    }
+
+    if (getCityArgs.endAt) {
+      query.where(`entity.created_at <= '${getCityArgs.endAt}'`);
+    }
+
+    return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} city`;
+  findOne(id: string) {
+    return this.cityRepository.findOneBy({ provinceId: id });
   }
 
-  update(id: number, updateCityInput: UpdateCityInput) {
-    return `This action updates a #${id} city`;
+  async update(id: string, updateCityInput: UpdateCityInput) {
+    const provinceData = await this.cityRepository.preload({
+      provinceId: id,
+      ...updateCityInput,
+    });
+
+    return this.cityRepository.save(provinceData);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} city`;
+  remove(id: string) {
+    return this.cityRepository.softDelete(id);
   }
 }

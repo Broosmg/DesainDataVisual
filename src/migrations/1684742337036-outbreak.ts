@@ -9,7 +9,6 @@ export class Outbreak1684742337036 implements MigrationInterface {
           {
             name: 'outbreak_id',
             type: 'uuid',
-            default: 'uuid_generate_v4()',
             isPrimary: true,
           },
           {

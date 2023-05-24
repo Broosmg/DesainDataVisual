@@ -1,10 +1,5 @@
-import { InputType, Field, PartialType } from '@nestjs/graphql';
-import { PrimaryGeneratedColumn } from 'typeorm';
+import { InputType, PartialType } from '@nestjs/graphql';
 import { CreateProvinceInput } from './create-province.input';
 
 @InputType()
-export class UpdateProvinceInput extends PartialType(CreateProvinceInput) {
-  @Field()
-  @PrimaryGeneratedColumn('uuid', { name: 'province_id' })
-  provinceId: string;
-}
+export class UpdateProvinceInput extends PartialType(CreateProvinceInput) {}

@@ -34,7 +34,10 @@ export class ProvinceService {
       query.where(`entity.created_at <= '${getProvinceArgs.endAt}'`);
     }
 
-    return query.getMany();
+    return query
+      .skip(getProvinceArgs.offset)
+      .take(getProvinceArgs.limit)
+      .getMany();
   }
 
   findOne(id: string) {

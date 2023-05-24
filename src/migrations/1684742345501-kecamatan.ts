@@ -9,7 +9,6 @@ export class Kecamatan1684742345501 implements MigrationInterface {
           {
             name: 'kecamatan_id',
             type: 'uuid',
-            default: 'uuid_generate_v4()',
             isPrimary: true,
           },
           {

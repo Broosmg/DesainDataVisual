@@ -1,10 +1,19 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { randomUUID } from 'crypto';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @InputType()
 @Entity({ name: 'province' })
 export class CreateProvinceInput {
   @Field()
+  @PrimaryColumn('uuid', { name: 'province_id' })
+  provinceId: string;
+
+  @Field()
   @Column({ name: 'province_name' })
   provinceName: string;
+
+  constructor() {
+    this.provinceId = randomUUID();
+  }
 }
