@@ -9,6 +9,7 @@ export class City1684742171785 implements MigrationInterface {
           {
             name: 'city_id',
             type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
           },
           {
