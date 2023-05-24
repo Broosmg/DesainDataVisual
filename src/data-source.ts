@@ -13,5 +13,5 @@ export const AppDataSource = new DataSource({
   username: configService.get<string>('DB_USERNAME') || 'root',
   password: configService.get<string>('DB_PASSWORD') || 'password',
   database: configService.get<string>('DB_NAME') || 'your_database_name',
-  migrations: [join(__dirname, '../src/migrations/*.{js,ts}')],
+  migrations: [join(__dirname, '../src/migrations/*.ts')],
 });

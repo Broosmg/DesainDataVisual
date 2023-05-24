@@ -21,7 +21,7 @@ export class ProvinceResolver {
     return this.provinceService.findAll(getProvinceArgs);
   }
 
-  @Query(() => Province, { name: 'province' })
+  @Query(() => Province, { name: 'province', nullable: true })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.provinceService.findOne(id);
   }
