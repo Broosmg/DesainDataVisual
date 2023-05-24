@@ -1,35 +1,43 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { KecamatanService } from './kecamatan.service';
 import { Kecamatan } from './entities/kecamatan.entity';
 import { CreateKecamatanInput } from './dto/create-kecamatan.input';
 import { UpdateKecamatanInput } from './dto/update-kecamatan.input';
+import { GetCityArgs } from './dto/get-kecamatan.args';
 
 @Resolver(() => Kecamatan)
 export class KecamatanResolver {
   constructor(private readonly kecamatanService: KecamatanService) {}
 
   @Mutation(() => Kecamatan)
-  createKecamatan(@Args('createKecamatanInput') createKecamatanInput: CreateKecamatanInput) {
+  createKecamatan(
+    @Args('createKecamatanInput') createKecamatanInput: CreateKecamatanInput,
+  ) {
     return this.kecamatanService.create(createKecamatanInput);
   }
 
-  @Query(() => [Kecamatan], { name: 'kecamatan' })
-  findAll() {
-    return this.kecamatanService.findAll();
+  @Query(() => [Kecamatan], { name: 'kecamatans' })
+  findAll(getCityArgs: GetCityArgs) {
+    return this.kecamatanService.findAll(getCityArgs);
   }
 
   @Query(() => Kecamatan, { name: 'kecamatan' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.kecamatanService.findOne(id);
   }
 
   @Mutation(() => Kecamatan)
-  updateKecamatan(@Args('updateKecamatanInput') updateKecamatanInput: UpdateKecamatanInput) {
-    return this.kecamatanService.update(updateKecamatanInput.id, updateKecamatanInput);
+  updateKecamatan(
+    @Args('updateKecamatanInput') updateKecamatanInput: UpdateKecamatanInput,
+  ) {
+    return this.kecamatanService.update(
+      updateKecamatanInput.kecamatanId,
+      updateKecamatanInput,
+    );
   }
 
   @Mutation(() => Kecamatan)
-  removeKecamatan(@Args('id', { type: () => Int }) id: number) {
+  removeKecamatan(@Args('id') id: string) {
     return this.kecamatanService.remove(id);
   }
 }
