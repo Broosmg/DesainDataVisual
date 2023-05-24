@@ -6,7 +6,7 @@ import { PrimaryColumn, Column } from 'typeorm';
 export class Kecamatan extends BaseEntity {
   @Field()
   @PrimaryColumn('uuid', { name: 'kecamatan_id' })
-  kecamatanId: string;
+  id: string;
 
   @Field()
   @Column({ name: 'kecamatan_name' })

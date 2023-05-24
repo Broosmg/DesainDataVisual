@@ -20,18 +20,18 @@ export class ProvinceService {
   }
 
   findAll(getProvinceArgs: GetProvinceArgs) {
-    const query = this.provinceRepository.createQueryBuilder('entity');
+    const query = this.provinceRepository.createQueryBuilder();
 
     if (getProvinceArgs.query) {
-      query.where(`entity.province_name LIKE '%${getProvinceArgs.query}%'`);
+      query.where(`province.province_name LIKE '%${getProvinceArgs.query}%'`);
     }
 
     if (getProvinceArgs.startAt) {
-      query.where(`entity.created_at >= '${getProvinceArgs.startAt}'`);
+      query.where(`province.created_at >= '${getProvinceArgs.startAt}'`);
     }
 
     if (getProvinceArgs.endAt) {
-      query.where(`entity.created_at <= '${getProvinceArgs.endAt}'`);
+      query.where(`province.created_at <= '${getProvinceArgs.endAt}'`);
     }
 
     return query
@@ -41,12 +41,12 @@ export class ProvinceService {
   }
 
   findOne(id: string) {
-    return this.provinceRepository.findOneBy({ provinceId: id });
+    return this.provinceRepository.findOneBy({ id: id });
   }
 
   async update(id: string, updateProvinceInput: UpdateProvinceInput) {
     const provinceData = await this.provinceRepository.preload({
-      provinceId: id,
+      id: id,
       ...updateProvinceInput,
     });
 

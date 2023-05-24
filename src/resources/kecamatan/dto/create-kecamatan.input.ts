@@ -6,7 +6,7 @@ import { PrimaryColumn, Column } from 'typeorm';
 export class CreateKecamatanInput {
   @Field()
   @PrimaryColumn('uuid', { name: 'kecamatan_id' })
-  kecamatanId: string;
+  id: string;
 
   @Field()
   @Column({ name: 'kecamatan_name' })
@@ -17,6 +17,6 @@ export class CreateKecamatanInput {
   cityId: string;
 
   constructor() {
-    this.kecamatanId = randomUUID();
+    this.id = randomUUID();
   }
 }

@@ -20,30 +20,30 @@ export class CityService {
   }
 
   findAll(getCityArgs: GetCityArgs) {
-    const query = this.cityRepository.createQueryBuilder('entity');
+    const query = this.cityRepository.createQueryBuilder();
 
     if (getCityArgs.query) {
-      query.where(`entity.city_name LIKE '%${getCityArgs.query}%'`);
+      query.where(`city.city_name LIKE '%${getCityArgs.query}%'`);
     }
 
     if (getCityArgs.startAt) {
-      query.where(`entity.created_at >= '${getCityArgs.startAt}'`);
+      query.where(`city.created_at >= '${getCityArgs.startAt}'`);
     }
 
     if (getCityArgs.endAt) {
-      query.where(`entity.created_at <= '${getCityArgs.endAt}'`);
+      query.where(`city.created_at <= '${getCityArgs.endAt}'`);
     }
 
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
   }
 
   findOne(id: string) {
-    return this.cityRepository.findOneBy({ provinceId: id });
+    return this.cityRepository.findOneBy({ id: id });
   }
 
   async update(id: string, updateCityInput: UpdateCityInput) {
     const provinceData = await this.cityRepository.preload({
-      provinceId: id,
+      id: id,
       ...updateCityInput,
     });
 

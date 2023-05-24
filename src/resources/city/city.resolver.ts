@@ -1,13 +1,25 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { CityService } from './city.service';
 import { City } from './entities/city.entity';
 import { CreateCityInput } from './dto/create-city.input';
 import { UpdateCityInput } from './dto/update-city.input';
 import { GetCityArgs } from './dto/get-city.args';
+import { Province } from '../province/entities/province.entity';
+import { ProvinceService } from '../province/province.service';
 
 @Resolver(() => City)
 export class CityResolver {
-  constructor(private readonly cityService: CityService) {}
+  constructor(
+    private readonly cityService: CityService,
+    private readonly provinceService: ProvinceService,
+  ) {}
 
   @Mutation(() => City)
   createCity(@Args('createCityInput') createCityInput: CreateCityInput) {
@@ -15,7 +27,7 @@ export class CityResolver {
   }
 
   @Query(() => [City], { name: 'cities' })
-  findAll(getCityArgs: GetCityArgs) {
+  findAll(@Args() getCityArgs: GetCityArgs) {
     return this.cityService.findAll(getCityArgs);
   }
 
@@ -26,11 +38,16 @@ export class CityResolver {
 
   @Mutation(() => City)
   updateCity(@Args('updateCityInput') updateCityInput: UpdateCityInput) {
-    return this.cityService.update(updateCityInput.cityId, updateCityInput);
+    return this.cityService.update(updateCityInput.id, updateCityInput);
   }
 
   @Mutation(() => City)
   removeCity(@Args('id') id: string) {
     return this.cityService.remove(id);
+  }
+
+  @ResolveField(() => Province)
+  province(@Parent() city: City) {
+    return this.provinceService.findOne(city.id);
   }
 }

@@ -31,7 +31,7 @@ export class KecamatanResolver {
     @Args('updateKecamatanInput') updateKecamatanInput: UpdateKecamatanInput,
   ) {
     return this.kecamatanService.update(
-      updateKecamatanInput.kecamatanId,
+      updateKecamatanInput.id,
       updateKecamatanInput,
     );
   }

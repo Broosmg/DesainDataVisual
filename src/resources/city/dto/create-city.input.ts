@@ -1,12 +1,13 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { randomUUID } from 'crypto';
-import { Column, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @InputType()
+@Entity({ name: 'city' })
 export class CreateCityInput {
   @Field()
   @PrimaryColumn('uuid', { name: 'city_id' })
-  cityId: string;
+  id: string;
 
   @Field()
   @Column({ name: 'city_name' })
@@ -17,6 +18,6 @@ export class CreateCityInput {
   provinceId: string;
 
   constructor() {
-    this.provinceId = randomUUID();
+    this.id = randomUUID();
   }
 }

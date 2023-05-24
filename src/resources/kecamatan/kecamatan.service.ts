@@ -20,30 +20,30 @@ export class KecamatanService {
   }
 
   findAll(getCityArgs: GetCityArgs) {
-    const query = this.kecamatanRepository.createQueryBuilder('entity');
+    const query = this.kecamatanRepository.createQueryBuilder();
 
     if (getCityArgs.query) {
-      query.where(`entity.city_name LIKE '%${getCityArgs.query}%'`);
+      query.where(`kecamatan.city_name LIKE '%${getCityArgs.query}%'`);
     }
 
     if (getCityArgs.startAt) {
-      query.where(`entity.created_at >= '${getCityArgs.startAt}'`);
+      query.where(`kecamatan.created_at >= '${getCityArgs.startAt}'`);
     }
 
     if (getCityArgs.endAt) {
-      query.where(`entity.created_at <= '${getCityArgs.endAt}'`);
+      query.where(`kecamatan.created_at <= '${getCityArgs.endAt}'`);
     }
 
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
   }
 
   findOne(id: string) {
-    return this.kecamatanRepository.findOneBy({ kecamatanId: id });
+    return this.kecamatanRepository.findOneBy({ id: id });
   }
 
   async update(id: string, updateKecamatanInput: UpdateKecamatanInput) {
     const provinceData = await this.kecamatanRepository.preload({
-      kecamatanId: id,
+      id: id,
       ...updateKecamatanInput,
     });
 

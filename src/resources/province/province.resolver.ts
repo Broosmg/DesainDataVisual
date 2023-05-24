@@ -31,7 +31,7 @@ export class ProvinceResolver {
     @Args('updateProvinceInput') updateProvinceInput: UpdateProvinceInput,
   ) {
     return this.provinceService.update(
-      updateProvinceInput.provinceId,
+      updateProvinceInput.id,
       updateProvinceInput,
     );
   }

@@ -7,13 +7,13 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 export class CreateProvinceInput {
   @Field()
   @PrimaryColumn('uuid', { name: 'province_id' })
-  provinceId: string;
+  id: string;
 
   @Field()
   @Column({ name: 'province_name' })
   provinceName: string;
 
   constructor() {
-    this.provinceId = randomUUID();
+    this.id = randomUUID();
   }
 }

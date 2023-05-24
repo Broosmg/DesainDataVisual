@@ -1,12 +1,14 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
-import { Column, PrimaryColumn } from 'typeorm';
+import { Province } from 'src/resources/province/entities/province.entity';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
+@Entity({ name: 'city' })
 export class City extends BaseEntity {
   @Field()
   @PrimaryColumn('uuid', { name: 'city_id' })
-  cityId: string;
+  id: string;
 
   @Field()
   @Column({ name: 'city_name' })
@@ -15,4 +17,8 @@ export class City extends BaseEntity {
   @Field()
   @Column({ name: 'province_id' })
   provinceId: string;
+
+  @Field(() => Province)
+  @ManyToOne(() => Province, (value) => value.cities)
+  province: Province;
 }
