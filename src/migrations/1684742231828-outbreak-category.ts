@@ -10,10 +10,9 @@ export class OutbreakCategory1684742231828 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_category_id',
-            type: 'bigint',
+            type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'outbreak_category_name',

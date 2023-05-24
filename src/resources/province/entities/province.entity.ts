@@ -6,8 +6,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'province' })
 export class Province extends BaseEntity {
   @Field()
-  @PrimaryGeneratedColumn({ name: 'province_id' })
-  provinceId: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'province_id' })
+  provinceId: string;
 
   @Field()
   @Column({ name: 'province_name' })

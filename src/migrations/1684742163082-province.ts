@@ -8,10 +8,9 @@ export class Province1684742163082 implements MigrationInterface {
         columns: [
           {
             name: 'province_id',
-            type: 'bigint',
+            type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'province_name',

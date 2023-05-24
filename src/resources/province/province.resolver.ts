@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ProvinceService } from './province.service';
 import { Province } from './entities/province.entity';
 import { CreateProvinceInput } from './dto/create-province.input';
@@ -22,7 +22,7 @@ export class ProvinceResolver {
   }
 
   @Query(() => Province, { name: 'province', nullable: true })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.provinceService.findOne(id);
   }
 
@@ -37,7 +37,7 @@ export class ProvinceResolver {
   }
 
   @Mutation(() => Province)
-  removeProvince(@Args('id', { type: () => Int }) id: number) {
+  removeProvince(@Args('id') id: string) {
     return this.provinceService.remove(id);
   }
 }

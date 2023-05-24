@@ -8,10 +8,9 @@ export class Kecamatan1684742345501 implements MigrationInterface {
         columns: [
           {
             name: 'kecamatan_id',
-            type: 'bigint',
+            type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'kecamatan_name',
@@ -20,7 +19,7 @@ export class Kecamatan1684742345501 implements MigrationInterface {
           },
           {
             name: 'city_id',
-            type: 'bigint',
+            type: 'uuid',
           },
           {
             name: 'created_at',

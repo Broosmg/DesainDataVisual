@@ -8,10 +8,9 @@ export class City1684742171785 implements MigrationInterface {
         columns: [
           {
             name: 'city_id',
-            type: 'bigint',
+            type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'city_name',
@@ -20,7 +19,7 @@ export class City1684742171785 implements MigrationInterface {
           },
           {
             name: 'province_id',
-            type: 'bigint',
+            type: 'uuid',
           },
           {
             name: 'created_at',

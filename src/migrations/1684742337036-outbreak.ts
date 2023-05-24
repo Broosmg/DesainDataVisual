@@ -8,18 +8,17 @@ export class Outbreak1684742337036 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_id',
-            type: 'bigint',
+            type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'outbreak_category_id',
-            type: 'bigint',
+            type: 'uuid',
           },
           {
             name: 'outbreak_level_id',
-            type: 'bigint',
+            type: 'uuid',
           },
           {
             name: 'latitude',
@@ -35,7 +34,7 @@ export class Outbreak1684742337036 implements MigrationInterface {
           },
           {
             name: 'kelurahan_id',
-            type: 'bigint',
+            type: 'uuid',
           },
           {
             name: 'created_at',

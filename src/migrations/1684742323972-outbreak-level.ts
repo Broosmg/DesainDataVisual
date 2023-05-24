@@ -23,10 +23,9 @@ export class OutbreakLevel1684742323972 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_level_id',
-            type: 'bigint',
+            type: 'uuid',
+            default: 'uuid_generate_v4()',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'outbreak_level_name',

@@ -5,6 +5,6 @@ import { CreateProvinceInput } from './create-province.input';
 @InputType()
 export class UpdateProvinceInput extends CreateProvinceInput {
   @Field()
-  @PrimaryGeneratedColumn({ name: 'province_id' })
-  provinceId: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'province_id' })
+  provinceId: string;
 }

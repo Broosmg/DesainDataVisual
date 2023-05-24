@@ -14,7 +14,9 @@ export class ProvinceService {
   ) {}
 
   create(createProvinceInput: CreateProvinceInput) {
-    return this.provinceRepository.save(createProvinceInput);
+    return this.provinceRepository.save(
+      this.provinceRepository.create(createProvinceInput),
+    );
   }
 
   findAll(getProvinceArgs: GetProvinceArgs) {
@@ -35,15 +37,20 @@ export class ProvinceService {
     return query.getMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.provinceRepository.findOneBy({ provinceId: id });
   }
 
-  update(id: number, updateProvinceInput: UpdateProvinceInput) {
-    return this.provinceRepository.update(id, updateProvinceInput);
+  async update(id: string, updateProvinceInput: UpdateProvinceInput) {
+    const provinceData = await this.provinceRepository.preload({
+      provinceId: id,
+      ...updateProvinceInput,
+    });
+
+    return this.provinceRepository.save(provinceData);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.provinceRepository.softDelete(id);
   }
 }
