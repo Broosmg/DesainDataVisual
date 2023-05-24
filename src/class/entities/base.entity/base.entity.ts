@@ -3,7 +3,7 @@ import { CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @ObjectType()
 @InputType()
-export class Base {
+export class BaseEntity {
   @Field()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
