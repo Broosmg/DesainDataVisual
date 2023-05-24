@@ -8,11 +8,11 @@ export class BaseEntity {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Field()
+  @Field({ nullable: true })
   @UpdateDateColumn({ name: 'updated_at', nullable: true })
   updatedAt?: Date;
 
-  @Field()
+  @Field({ nullable: true })
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt?: Date;
 }

@@ -5,11 +5,11 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @ObjectType()
 @Entity({ name: 'province' })
 export class Province extends BaseEntity {
-  @Field({ nullable: true })
+  @Field()
   @PrimaryGeneratedColumn({ name: 'province_id' })
   provinceId: number;
 
-  @Field({ nullable: true })
+  @Field()
   @Column({ name: 'province_name' })
   provinceName: string;
 }
