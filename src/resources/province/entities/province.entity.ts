@@ -1,25 +1,31 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @ObjectType()
 export class Province {
-  @PrimaryColumn({ name: 'province_id' })
+  @Field()
+  @PrimaryGeneratedColumn({ name: 'province_id' })
   provinceId: number;
 
-  @Field({ name: 'province_name' })
+  @Field()
+  @Column({ name: 'province_name' })
   provinceName: string;
 
+  @Field()
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: object;
+  createdAt: Date;
 
+  @Field()
   @UpdateDateColumn({ name: 'updated_at', nullable: true })
-  updatedAt: object;
+  updatedAt?: Date;
 
+  @Field()
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: object;
+  deletedAt?: Date;
 }

@@ -11,5 +11,4 @@ export const config: TypeOrmModuleOptions = {
   username: configService.get<string>('DB_USERNAME') || 'root',
   password: configService.get<string>('DB_PASSWORD') || 'password',
   database: configService.get<string>('DB_NAME') || 'your_database_name',
-  entities: [__dirname + '/../**/*.entity.{js,ts}'],
 };

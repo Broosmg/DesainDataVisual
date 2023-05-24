@@ -19,7 +19,7 @@ import { join } from 'path';
     TypeOrmModule.forRoot(config),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: join(__dirname, 'schema.gql'),
     }),
     KecamatanModule,
     CityModule,

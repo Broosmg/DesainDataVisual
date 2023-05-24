@@ -9,11 +9,13 @@ export class ProvinceResolver {
   constructor(private readonly provinceService: ProvinceService) {}
 
   @Mutation(() => Province)
-  createProvince(@Args('createProvinceInput') createProvinceInput: CreateProvinceInput) {
+  createProvince(
+    @Args('createProvinceInput') createProvinceInput: CreateProvinceInput,
+  ) {
     return this.provinceService.create(createProvinceInput);
   }
 
-  @Query(() => [Province], { name: 'province' })
+  @Query(() => [Province], { name: 'provinces' })
   findAll() {
     return this.provinceService.findAll();
   }
@@ -24,8 +26,13 @@ export class ProvinceResolver {
   }
 
   @Mutation(() => Province)
-  updateProvince(@Args('updateProvinceInput') updateProvinceInput: UpdateProvinceInput) {
-    return this.provinceService.update(updateProvinceInput.id, updateProvinceInput);
+  updateProvince(
+    @Args('updateProvinceInput') updateProvinceInput: UpdateProvinceInput,
+  ) {
+    return this.provinceService.update(
+      updateProvinceInput.provinceId,
+      updateProvinceInput,
+    );
   }
 
   @Mutation(() => Province)

@@ -1,7 +1,9 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import { Column } from 'typeorm';
 
 @InputType()
 export class CreateProvinceInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  @Column({ name: 'province_name' })
+  provinceName: string;
 }
