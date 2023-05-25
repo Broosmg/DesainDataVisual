@@ -4,7 +4,7 @@ import { UpdateDistrictInput } from './dto/update-district.input';
 import { District } from './entities/district.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GetDistrictArgs } from './dto/get-district.args copy';
+import { GetDistrictArgs } from './dto/get-district.args';
 
 @Injectable()
 export class DistrictService {

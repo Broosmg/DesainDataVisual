@@ -1,13 +1,14 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { Column } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @InputType()
+@Entity({ name: 'district' })
 export class CreateDistrictInput {
   @Field()
   @Column({ name: 'city_id' })
   cityId: number;
 
   @Field()
-  @Column({ name: 'kecamatan_name' })
-  kecamatanName: string;
+  @Column({ name: 'district_name' })
+  districtName: string;
 }

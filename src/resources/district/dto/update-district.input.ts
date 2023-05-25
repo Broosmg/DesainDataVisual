@@ -9,6 +9,6 @@ export class UpdateDistrictInput
   implements BaseInputInterface
 {
   @Field()
-  @PrimaryGeneratedColumn('increment', { name: 'kecamatan_id' })
+  @PrimaryGeneratedColumn('increment', { name: 'district_id' })
   id: number;
 }

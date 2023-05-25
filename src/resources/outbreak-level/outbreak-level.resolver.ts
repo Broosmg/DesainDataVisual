@@ -18,11 +18,11 @@ export class OutbreakLevelResolver {
   }
 
   @Query(() => [OutbreakLevel], { name: 'outbreakLevel' })
-  findAll(getOutbreakLevelArgs: GetOutbreakLevelArgs) {
+  findAll(@Args() getOutbreakLevelArgs: GetOutbreakLevelArgs) {
     return this.outbreakLevelService.findAll(getOutbreakLevelArgs);
   }
 
-  @Query(() => OutbreakLevel, { name: 'outbreakLevel' })
+  @Query(() => OutbreakLevel, { name: 'outbreakLevel', nullable: true })
   findOne(@Args('id') id: string) {
     return this.outbreakLevelService.findOne(id);
   }

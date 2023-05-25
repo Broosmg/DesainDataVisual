@@ -31,7 +31,7 @@ export class CityResolver {
     return this.cityService.findAll(getCityArgs);
   }
 
-  @Query(() => City, { name: 'city' })
+  @Query(() => City, { name: 'city', nullable: true })
   findOne(@Args('id') id: number) {
     return this.cityService.findOne(id);
   }

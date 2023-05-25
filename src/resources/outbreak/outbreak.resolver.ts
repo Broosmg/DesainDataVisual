@@ -35,11 +35,11 @@ export class OutbreakResolver {
   }
 
   @Query(() => [Outbreak], { name: 'outbreak' })
-  findAll(getOutbreakArgs: GetOutbreakArgs) {
+  findAll(@Args() getOutbreakArgs: GetOutbreakArgs) {
     return this.outbreakService.findAll(getOutbreakArgs);
   }
 
-  @Query(() => Outbreak, { name: 'outbreak' })
+  @Query(() => Outbreak, { name: 'outbreak', nullable: true })
   findOne(@Args('id') id: string) {
     return this.outbreakService.findOne(id);
   }

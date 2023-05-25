@@ -20,11 +20,11 @@ export class OutbreakCategoryResolver {
   }
 
   @Query(() => [OutbreakCategory], { name: 'outbreakCategory' })
-  findAll(getOutbreakCategoryArgs: GetOutbreakCategoryArgs) {
+  findAll(@Args() getOutbreakCategoryArgs: GetOutbreakCategoryArgs) {
     return this.outbreakCategoryService.findAll(getOutbreakCategoryArgs);
   }
 
-  @Query(() => OutbreakCategory, { name: 'outbreakCategory' })
+  @Query(() => OutbreakCategory, { name: 'outbreakCategory', nullable: true })
   findOne(@Args('id') id: string) {
     return this.outbreakCategoryService.findOne(id);
   }
