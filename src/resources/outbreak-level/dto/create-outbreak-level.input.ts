@@ -1,10 +1,11 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { randomUUID } from 'crypto';
+import { BaseInputInterface } from 'src/interfaces/dto/base.input/base.input.interface';
 import { PrimaryColumn, Column, Entity } from 'typeorm';
 
 @InputType()
 @Entity({ name: 'outbreak_level' })
-export class CreateOutbreakLevelInput {
+export class CreateOutbreakLevelInput implements BaseInputInterface {
   @Field()
   @PrimaryColumn('uuid', { name: 'outbreak_level_id' })
   id: string;

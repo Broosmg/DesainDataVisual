@@ -1,9 +1,10 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
 import { PrimaryColumn, Column, Entity } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'outbreak_level' })
-export class OutbreakLevel {
+export class OutbreakLevel implements BaseEntityInterface {
   @Field()
   @PrimaryColumn('uuid', { name: 'outbreak_level_id' })
   id: string;

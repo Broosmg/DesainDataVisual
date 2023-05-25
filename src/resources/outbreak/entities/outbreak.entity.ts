@@ -1,10 +1,11 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
+import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
 import { PrimaryColumn, Column, Entity } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'outbreak' })
-export class Outbreak extends BaseEntity {
+export class Outbreak extends BaseEntity implements BaseEntityInterface {
   @Field()
   @PrimaryColumn('uuid', { name: 'outbreak_category_id' })
   id: string;
