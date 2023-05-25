@@ -48,6 +48,6 @@ export class CityResolver {
 
   @ResolveField(() => Province)
   province(@Parent() city: City) {
-    return this.provinceService.findOne(city.id);
+    return this.provinceService.findOne(city.provinceId);
   }
 }

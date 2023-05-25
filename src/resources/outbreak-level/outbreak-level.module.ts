@@ -7,5 +7,6 @@ import { OutbreakLevel } from './entities/outbreak-level.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([OutbreakLevel])],
   providers: [OutbreakLevelResolver, OutbreakLevelService],
+  exports: [OutbreakLevelService],
 })
 export class OutbreakLevelModule {}

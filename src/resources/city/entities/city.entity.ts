@@ -2,7 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
 import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
 import { Province } from 'src/resources/province/entities/province.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'city' })
@@ -19,7 +19,6 @@ export class City extends BaseEntity implements BaseEntityInterface {
   @Column({ name: 'province_id' })
   provinceId: string;
 
-  @Field(() => Province)
-  @ManyToOne(() => Province, (value) => value.cities)
+  @Field()
   province: Province;
 }

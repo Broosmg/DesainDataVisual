@@ -31,8 +31,8 @@ export class CreateOutbreakInput implements BaseInputInterface {
   radius: number;
 
   @Field()
-  @Column({ name: 'kelurahan_id' })
-  kelurahanId: string;
+  @Column({ name: 'kecamatan_id' })
+  kecamatanId: string;
 
   constructor() {
     this.id = randomUUID();
