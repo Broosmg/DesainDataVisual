@@ -32,7 +32,7 @@ export class CityResolver {
   }
 
   @Query(() => City, { name: 'city' })
-  findOne(@Args('id') id: string) {
+  findOne(@Args('id') id: number) {
     return this.cityService.findOne(id);
   }
 
@@ -42,7 +42,7 @@ export class CityResolver {
   }
 
   @Mutation(() => City)
-  removeCity(@Args('id') id: string) {
+  removeCity(@Args('id') id: number) {
     return this.cityService.remove(id);
   }
 

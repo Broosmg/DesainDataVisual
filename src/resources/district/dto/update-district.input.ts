@@ -1,14 +1,14 @@
 import { BaseInputInterface } from 'src/interfaces/dto/base.input/base.input.interface';
 import { PrimaryGeneratedColumn } from 'typeorm';
-import { CreateCityInput } from './create-city.input';
+import { CreateDistrictInput } from './create-district.input';
 import { Field, InputType, PartialType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateCityInput
-  extends PartialType(CreateCityInput)
+export class UpdateDistrictInput
+  extends PartialType(CreateDistrictInput)
   implements BaseInputInterface
 {
   @Field()
-  @PrimaryGeneratedColumn('increment', { name: 'city_id' })
+  @PrimaryGeneratedColumn('increment', { name: 'kecamatan_id' })
   id: number;
 }

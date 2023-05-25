@@ -1,25 +1,27 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class Kecamatan1684742345501 implements MigrationInterface {
+export class District1684742345501 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'kecamatan',
+        name: 'district',
         columns: [
           {
-            name: 'kecamatan_id',
-            type: 'uuid',
-            default: 'uuid_generate_v4()',
+            name: 'district_id',
+            type: 'bigint',
             isPrimary: true,
-          },
-          {
-            name: 'kecamatan_name',
-            type: 'varchar',
-            length: '45',
+            isGenerated: true,
           },
           {
             name: 'city_id',
-            type: 'uuid',
+            type: 'bigint',
+          },
+          {
+            name: 'district_name',
+            type: 'varchar',
+            length: '255',
           },
           {
             name: 'created_at',
@@ -40,11 +42,14 @@ export class Kecamatan1684742345501 implements MigrationInterface {
       }),
     );
     await queryRunner.query(
-      'CREATE INDEX kecamatan_idx ON public.kecamatan (kecamatan_name, city_id)',
+      'CREATE INDEX district_idx ON district (district_name, city_id)',
+    );
+    await queryRunner.query(
+      readFileSync(join(__dirname, '../../data/district.sql')).toString(),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('kecamatan');
+    await queryRunner.dropTable('district');
   }
 }

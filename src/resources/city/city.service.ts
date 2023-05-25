@@ -37,11 +37,11 @@ export class CityService {
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.cityRepository.findOneBy({ id: id });
   }
 
-  async update(id: string, updateCityInput: UpdateCityInput) {
+  async update(id: number, updateCityInput: UpdateCityInput) {
     const provinceData = await this.cityRepository.preload({
       id: id,
       ...updateCityInput,
@@ -50,7 +50,7 @@ export class CityService {
     return this.cityRepository.save(provinceData);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.cityRepository.softDelete(id);
   }
 }

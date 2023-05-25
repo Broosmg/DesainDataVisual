@@ -40,11 +40,11 @@ export class ProvinceService {
       .getMany();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.provinceRepository.findOneBy({ id: id });
   }
 
-  async update(id: string, updateProvinceInput: UpdateProvinceInput) {
+  async update(id: number, updateProvinceInput: UpdateProvinceInput) {
     const provinceData = await this.provinceRepository.preload({
       id: id,
       ...updateProvinceInput,
@@ -53,7 +53,7 @@ export class ProvinceService {
     return this.provinceRepository.save(provinceData);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.provinceRepository.softDelete(id);
   }
 }

@@ -1,7 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
 import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
-import { Kecamatan } from 'src/resources/kecamatan/entities/kecamatan.entity';
+import { District } from 'src/resources/district/entities/district.entity';
 import { OutbreakCategory } from 'src/resources/outbreak-category/entities/outbreak-category.entity';
 import { OutbreakLevel } from 'src/resources/outbreak-level/entities/outbreak-level.entity';
 import { PrimaryColumn, Column, Entity } from 'typeorm';
@@ -18,8 +18,14 @@ export class Outbreak extends BaseEntity implements BaseEntityInterface {
   outbreakCategoryId: string;
 
   @Field()
+  outbreakCategory: OutbreakCategory;
+
+  @Field()
   @Column({ name: 'outbreak_level_id' })
   outbreakLevelId: string;
+
+  @Field()
+  outbreakLevel: OutbreakLevel;
 
   @Field()
   @Column({ name: 'latitude' })
@@ -34,15 +40,9 @@ export class Outbreak extends BaseEntity implements BaseEntityInterface {
   radius: number;
 
   @Field()
-  @Column({ name: 'kecamatan_id' })
-  kecamatanId: string;
+  @Column({ name: 'district_id' })
+  districtId: number;
 
   @Field()
-  outbreakCategory: OutbreakCategory;
-
-  @Field()
-  outbreakLevel: OutbreakLevel;
-
-  @Field()
-  kecamatan: Kecamatan;
+  district: District;
 }

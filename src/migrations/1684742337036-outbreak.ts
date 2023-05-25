@@ -33,8 +33,8 @@ export class Outbreak1684742337036 implements MigrationInterface {
             type: 'double precision',
           },
           {
-            name: 'kecamatan_id',
-            type: 'uuid',
+            name: 'district_id',
+            type: 'bigint',
           },
           {
             name: 'created_at',

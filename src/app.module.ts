@@ -7,10 +7,10 @@ import { ProvinceModule } from './resources/province/province.module';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CityModule } from './resources/city/city.module';
-import { KecamatanModule } from './resources/kecamatan/kecamatan.module';
 import { OutbreakModule } from './resources/outbreak/outbreak.module';
 import { OutbreakLevelModule } from './resources/outbreak-level/outbreak-level.module';
 import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-category.module';
+import { DistrictModule } from './resources/district/district.module';
 
 @Module({
   imports: [
@@ -24,12 +24,12 @@ import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-c
       autoSchemaFile: true,
       playground: new ConfigService().get<string>('NODE_ENV') == 'development',
     }),
-    KecamatanModule,
     CityModule,
     ProvinceModule,
     OutbreakModule,
     OutbreakLevelModule,
     OutbreakCategoryModule,
+    DistrictModule,
   ],
   controllers: [AppController],
 })

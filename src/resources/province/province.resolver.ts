@@ -22,7 +22,7 @@ export class ProvinceResolver {
   }
 
   @Query(() => Province, { name: 'province', nullable: true })
-  findOne(@Args('id') id: string) {
+  findOne(@Args('id') id: number) {
     return this.provinceService.findOne(id);
   }
 
@@ -37,7 +37,7 @@ export class ProvinceResolver {
   }
 
   @Mutation(() => Province)
-  removeProvince(@Args('id') id: string) {
+  removeProvince(@Args('id') id: number) {
     return this.provinceService.remove(id);
   }
 }

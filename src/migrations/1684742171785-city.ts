@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class City1684742171785 implements MigrationInterface {
@@ -8,18 +10,18 @@ export class City1684742171785 implements MigrationInterface {
         columns: [
           {
             name: 'city_id',
-            type: 'uuid',
-            default: 'uuid_generate_v4()',
+            type: 'bigint',
             isPrimary: true,
+            isGenerated: true,
+          },
+          {
+            name: 'province_id',
+            type: 'bigint',
           },
           {
             name: 'city_name',
             type: 'varchar',
-            length: '45',
-          },
-          {
-            name: 'province_id',
-            type: 'uuid',
+            length: '255',
           },
           {
             name: 'created_at',
@@ -40,7 +42,10 @@ export class City1684742171785 implements MigrationInterface {
       }),
     );
     await queryRunner.query(
-      'CREATE INDEX city_idx ON public.city (city_name, province_id)',
+      'CREATE INDEX city_idx ON city (city_name, province_id)',
+    );
+    await queryRunner.query(
+      readFileSync(join(__dirname, '../../data/city.sql')).toString(),
     );
   }
 
