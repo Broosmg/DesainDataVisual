@@ -3,7 +3,7 @@ import { CreateKecamatanInput } from './dto/create-kecamatan.input';
 import { UpdateKecamatanInput } from './dto/update-kecamatan.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GetCityArgs } from './dto/get-kecamatan.args';
+import { GetKecamatanArgs } from './dto/get-kecamatan.args';
 import { Kecamatan } from './entities/kecamatan.entity';
 
 @Injectable()
@@ -19,22 +19,25 @@ export class KecamatanService {
     );
   }
 
-  findAll(getCityArgs: GetCityArgs) {
+  findAll(getKecamatanArgs: GetKecamatanArgs) {
     const query = this.kecamatanRepository.createQueryBuilder();
 
-    if (getCityArgs.query) {
-      query.where(`kecamatan.city_name LIKE '%${getCityArgs.query}%'`);
+    if (getKecamatanArgs.query) {
+      query.where(`kecamatan_name LIKE '%${getKecamatanArgs.query}%'`);
     }
 
-    if (getCityArgs.startAt) {
-      query.where(`kecamatan.created_at >= '${getCityArgs.startAt}'`);
+    if (getKecamatanArgs.startAt) {
+      query.where(`created_at >= '${getKecamatanArgs.startAt}'`);
     }
 
-    if (getCityArgs.endAt) {
-      query.where(`kecamatan.created_at <= '${getCityArgs.endAt}'`);
+    if (getKecamatanArgs.endAt) {
+      query.where(`created_at <= '${getKecamatanArgs.endAt}'`);
     }
 
-    return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
+    return query
+      .skip(getKecamatanArgs.offset)
+      .take(getKecamatanArgs.limit)
+      .getMany();
   }
 
   findOne(id: string) {

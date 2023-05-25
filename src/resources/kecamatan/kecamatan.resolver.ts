@@ -3,7 +3,7 @@ import { KecamatanService } from './kecamatan.service';
 import { Kecamatan } from './entities/kecamatan.entity';
 import { CreateKecamatanInput } from './dto/create-kecamatan.input';
 import { UpdateKecamatanInput } from './dto/update-kecamatan.input';
-import { GetCityArgs } from './dto/get-kecamatan.args';
+import { GetKecamatanArgs } from './dto/get-kecamatan.args';
 
 @Resolver(() => Kecamatan)
 export class KecamatanResolver {
@@ -17,8 +17,8 @@ export class KecamatanResolver {
   }
 
   @Query(() => [Kecamatan], { name: 'kecamatans' })
-  findAll(getCityArgs: GetCityArgs) {
-    return this.kecamatanService.findAll(getCityArgs);
+  findAll(getKecamatanArgs: GetKecamatanArgs) {
+    return this.kecamatanService.findAll(getKecamatanArgs);
   }
 
   @Query(() => Kecamatan, { name: 'kecamatan' })

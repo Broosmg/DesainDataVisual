@@ -23,15 +23,15 @@ export class CityService {
     const query = this.cityRepository.createQueryBuilder();
 
     if (getCityArgs.query) {
-      query.where(`city.city_name LIKE '%${getCityArgs.query}%'`);
+      query.where(`city_name LIKE '%${getCityArgs.query}%'`);
     }
 
     if (getCityArgs.startAt) {
-      query.where(`city.created_at >= '${getCityArgs.startAt}'`);
+      query.where(`created_at >= '${getCityArgs.startAt}'`);
     }
 
     if (getCityArgs.endAt) {
-      query.where(`city.created_at <= '${getCityArgs.endAt}'`);
+      query.where(`created_at <= '${getCityArgs.endAt}'`);
     }
 
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
