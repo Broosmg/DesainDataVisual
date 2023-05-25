@@ -26,6 +26,10 @@ export class DistrictService {
       query.where(`district_name LIKE '%${getDistrictArgs.query}%'`);
     }
 
+    if (getDistrictArgs.cityId) {
+      query.where(`city_id = ${getDistrictArgs.cityId}`);
+    }
+
     if (getDistrictArgs.startAt) {
       query.where(`created_at >= '${getDistrictArgs.startAt}'`);
     }

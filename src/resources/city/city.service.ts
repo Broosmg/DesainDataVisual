@@ -26,6 +26,10 @@ export class CityService {
       query.where(`city_name LIKE '%${getCityArgs.query}%'`);
     }
 
+    if (getCityArgs.provinceId) {
+      query.where(`province_id = ${getCityArgs.provinceId}`);
+    }
+
     if (getCityArgs.startAt) {
       query.where(`created_at >= '${getCityArgs.startAt}'`);
     }
