@@ -23,11 +23,11 @@ export class DistrictService {
     const query = this.districtRepository.createQueryBuilder();
 
     if (getDistrictArgs.query) {
-      query.where(`district_name LIKE '%${getDistrictArgs.query}%'`);
+      query.where(`lower(district_name) LIKE '%${getDistrictArgs.query}%'`);
     }
 
     if (getDistrictArgs.cityId) {
-      query.where(`city_id = ${getDistrictArgs.cityId}`);
+      query.where(`city_id in (${getDistrictArgs.cityId})`);
     }
 
     if (getDistrictArgs.startAt) {

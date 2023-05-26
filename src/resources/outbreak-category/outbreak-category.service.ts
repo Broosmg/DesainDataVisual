@@ -24,7 +24,7 @@ export class OutbreakCategoryService {
 
     if (getOutbreakCategoryArgs.query) {
       query.where(
-        `outbreak_category_name LIKE '%${getOutbreakCategoryArgs.query}%'`,
+        `lower(outbreak_category_name) LIKE '%${getOutbreakCategoryArgs.query}%'`,
       );
     }
 

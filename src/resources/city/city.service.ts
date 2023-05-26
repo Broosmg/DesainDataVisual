@@ -23,11 +23,13 @@ export class CityService {
     const query = this.cityRepository.createQueryBuilder();
 
     if (getCityArgs.query) {
-      query.where(`city_name LIKE '%${getCityArgs.query}%'`);
+      query.where(
+        `lower(city_name) LIKE '%${getCityArgs.query.toLowerCase()}%'`,
+      );
     }
 
     if (getCityArgs.provinceId) {
-      query.where(`province_id = ${getCityArgs.provinceId}`);
+      query.where(`province_id in (${getCityArgs.provinceId})`);
     }
 
     if (getCityArgs.startAt) {

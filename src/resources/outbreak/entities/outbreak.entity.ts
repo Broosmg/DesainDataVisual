@@ -28,11 +28,11 @@ export class Outbreak extends BaseEntity implements BaseEntityInterface {
   outbreakLevel: OutbreakLevel;
 
   @Field()
-  @Column({ name: 'latitude' })
+  @Column({ name: 'latitude', type: 'double precision' })
   latitude: number;
 
   @Field()
-  @Column({ name: 'longitude' })
+  @Column({ name: 'longitude', type: 'double precision' })
   longitude: number;
 
   @Field()

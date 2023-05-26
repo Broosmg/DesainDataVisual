@@ -22,10 +22,6 @@ export class OutbreakService {
   findAll(getOutbreakArgs: GetOutbreakArgs) {
     const query = this.outbreakRepository.createQueryBuilder();
 
-    if (getOutbreakArgs.query) {
-      query.where(`city_name LIKE '%${getOutbreakArgs.query}%'`);
-    }
-
     if (getOutbreakArgs.outbreakCategoryId) {
       query.where(
         `outbreak_category_id = '${getOutbreakArgs.outbreakCategoryId}'`,
@@ -37,7 +33,7 @@ export class OutbreakService {
     }
 
     if (getOutbreakArgs.districtId) {
-      query.where(`district_id = ${getOutbreakArgs.districtId}`);
+      query.where(`district_id in (${getOutbreakArgs.districtId})`);
     }
 
     if (getOutbreakArgs.startAt) {

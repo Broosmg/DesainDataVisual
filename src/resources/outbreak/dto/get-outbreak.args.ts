@@ -10,5 +10,5 @@ export class GetOutbreakArgs extends BaseArgs {
   outbreakLevelId: string;
 
   @Field({ nullable: true })
-  districtId: number;
+  districtId: string;
 }

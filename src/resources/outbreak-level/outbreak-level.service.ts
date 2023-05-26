@@ -23,7 +23,9 @@ export class OutbreakLevelService {
     const query = this.outbreakLevelRepository.createQueryBuilder();
 
     if (getOutbreakLevelArgs.query) {
-      query.where(`outbreak_level_name LIKE '%${getOutbreakLevelArgs.query}%'`);
+      query.where(
+        `lower(outbreak_level_name) LIKE '%${getOutbreakLevelArgs.query}%'`,
+      );
     }
 
     if (getOutbreakLevelArgs.startAt) {
