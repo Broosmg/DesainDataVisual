@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +11,7 @@ import { OutbreakModule } from './resources/outbreak/outbreak.module';
 import { OutbreakLevelModule } from './resources/outbreak-level/outbreak-level.module';
 import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-category.module';
 import { DistrictModule } from './resources/district/district.module';
+import { SecurityMiddleware } from './middleware/security/security.middleware';
 
 @Module({
   imports: [
@@ -33,4 +34,8 @@ import { DistrictModule } from './resources/district/district.module';
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SecurityMiddleware).forRoutes('graphql');
+  }
+}
