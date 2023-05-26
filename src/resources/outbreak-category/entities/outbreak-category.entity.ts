@@ -15,5 +15,5 @@ export class OutbreakCategory
 
   @Field()
   @Column({ name: 'outbreak_category_name' })
-  outbreakCategoryName: string;
+  name: string;
 }

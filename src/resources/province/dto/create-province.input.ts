@@ -6,5 +6,5 @@ import { Column, Entity } from 'typeorm';
 export class CreateProvinceInput {
   @Field()
   @Column({ name: 'province_name' })
-  provinceName: string;
+  name: string;
 }

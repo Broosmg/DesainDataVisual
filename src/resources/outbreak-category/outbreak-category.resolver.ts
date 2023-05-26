@@ -19,7 +19,7 @@ export class OutbreakCategoryResolver {
     return this.outbreakCategoryService.create(createOutbreakCategoryInput);
   }
 
-  @Query(() => [OutbreakCategory], { name: 'outbreakCategory' })
+  @Query(() => [OutbreakCategory], { name: 'outbreakCategories' })
   findAll(@Args() getOutbreakCategoryArgs: GetOutbreakCategoryArgs) {
     return this.outbreakCategoryService.findAll(getOutbreakCategoryArgs);
   }

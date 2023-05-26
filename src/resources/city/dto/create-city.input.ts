@@ -10,5 +10,5 @@ export class CreateCityInput {
 
   @Field()
   @Column({ name: 'city_name' })
-  cityName: string;
+  name: string;
 }

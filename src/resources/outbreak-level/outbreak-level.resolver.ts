@@ -17,7 +17,7 @@ export class OutbreakLevelResolver {
     return this.outbreakLevelService.create(createOutbreakLevelInput);
   }
 
-  @Query(() => [OutbreakLevel], { name: 'outbreakLevel' })
+  @Query(() => [OutbreakLevel], { name: 'outbreakLevels' })
   findAll(@Args() getOutbreakLevelArgs: GetOutbreakLevelArgs) {
     return this.outbreakLevelService.findAll(getOutbreakLevelArgs);
   }

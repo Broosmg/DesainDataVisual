@@ -12,5 +12,5 @@ export class Province extends BaseEntity implements BaseEntityInterface {
 
   @Field()
   @Column({ name: 'province_name' })
-  provinceName: string;
+  name: string;
 }

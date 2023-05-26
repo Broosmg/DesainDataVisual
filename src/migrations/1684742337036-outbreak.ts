@@ -1,3 +1,7 @@
+import { randomUUID } from 'crypto';
+import * as csv from 'csv-parser';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Outbreak1684742337036 implements MigrationInterface {
@@ -57,9 +61,26 @@ export class Outbreak1684742337036 implements MigrationInterface {
     await queryRunner.query(
       'CREATE INDEX outbreak_idx ON public.outbreak (outbreak_category_id, outbreak_level_id)',
     );
+    this.csvToDb(join(__dirname, '../../data/outbreak/dbd.csv'), queryRunner);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('outbreak');
+  }
+
+  private csvToDb(path: string, queryRunner: QueryRunner) {
+    createReadStream(path)
+      .pipe(csv())
+      .on('data', async (row: any) => {
+        if (row) {
+          await queryRunner.query(
+            `INSERT INTO outbreak VALUES ('${randomUUID()}', '${
+              row.outbreak_category_id
+            }', '${row.outbreak_level_id}', ${row.latitude}, ${
+              row.longitude
+            }, ${row.radius}, ${row.district_id})`,
+          );
+        }
+      });
   }
 }

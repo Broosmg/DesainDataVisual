@@ -20,5 +20,5 @@ export class City extends BaseEntity implements BaseEntityInterface {
 
   @Field()
   @Column({ name: 'city_name' })
-  cityName: string;
+  name: string;
 }

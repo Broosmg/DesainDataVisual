@@ -12,7 +12,7 @@ export class CreateOutbreakCategoryInput implements BaseInputInterface {
 
   @Field()
   @Column({ name: 'outbreak_category_name' })
-  outbreakCategoryName: string;
+  name: string;
 
   constructor() {
     this.id = randomUUID();

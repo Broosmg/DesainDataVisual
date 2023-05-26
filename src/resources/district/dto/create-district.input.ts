@@ -10,5 +10,5 @@ export class CreateDistrictInput {
 
   @Field()
   @Column({ name: 'district_name' })
-  districtName: string;
+  name: string;
 }

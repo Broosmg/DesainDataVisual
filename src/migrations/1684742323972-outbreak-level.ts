@@ -4,14 +4,17 @@ export class OutbreakLevel1684742323972 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const levels = [
       {
+        id: '81e896e1-32bc-46c5-95ba-91dde0a0580f',
         name: 'Level 1',
         color: '#ffff00',
       },
       {
+        id: 'f1b919f0-f0df-4a49-abff-7e59be8c2994',
         name: 'Level 2',
         color: '#ffa500',
       },
       {
+        id: '6b3c7435-4089-456a-bd63-95bb74c2bec2',
         name: 'Level 3',
         color: '#ff0000',
       },
@@ -61,7 +64,7 @@ export class OutbreakLevel1684742323972 implements MigrationInterface {
 
     for (const iterator of levels) {
       await queryRunner.query(
-        `INSERT INTO public.outbreak_level (outbreak_level_name, indicator_color) VALUES ('${iterator.name}', '${iterator.color}')`,
+        `INSERT INTO public.outbreak_level VALUES ('${iterator.id}', '${iterator.name}', '${iterator.color}')`,
       );
     }
   }

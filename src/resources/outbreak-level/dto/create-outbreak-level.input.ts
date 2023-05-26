@@ -12,7 +12,7 @@ export class CreateOutbreakLevelInput implements BaseInputInterface {
 
   @Field()
   @Column({ name: 'outbreak_level_name' })
-  outbreakLevelName: string;
+  name: string;
 
   @Field()
   @Column({ name: 'indicator_color' })

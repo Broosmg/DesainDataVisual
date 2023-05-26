@@ -34,7 +34,7 @@ export class OutbreakResolver {
     return this.outbreakService.create(createOutbreakInput);
   }
 
-  @Query(() => [Outbreak], { name: 'outbreak' })
+  @Query(() => [Outbreak], { name: 'outbreaks' })
   findAll(@Args() getOutbreakArgs: GetOutbreakArgs) {
     return this.outbreakService.findAll(getOutbreakArgs);
   }

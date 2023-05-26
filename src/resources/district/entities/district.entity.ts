@@ -19,5 +19,5 @@ export class District extends BaseEntity implements BaseEntityInterface {
 
   @Field()
   @Column({ name: 'district_name' })
-  districtName: string;
+  name: string;
 }

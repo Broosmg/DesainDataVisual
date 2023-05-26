@@ -2,7 +2,20 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class OutbreakCategory1684742231828 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const categories = ['DBD', 'Stunting', 'Covid-19'];
+    const categories = [
+      {
+        id: '3d3df896-8a1e-4c12-a35c-fc20d67c9416',
+        name: 'DBD',
+      },
+      {
+        id: 'f4af598c-6cb4-4e5b-bf15-da932b3a32af',
+        name: 'Stunting',
+      },
+      {
+        id: '97d3c132-2e55-49b3-a538-f87da4569d02',
+        name: 'Covid-19',
+      },
+    ];
 
     await queryRunner.createTable(
       new Table({
@@ -43,7 +56,7 @@ export class OutbreakCategory1684742231828 implements MigrationInterface {
 
     for (const iterator of categories) {
       await queryRunner.query(
-        `INSERT INTO public.outbreak_category (outbreak_category_name) VALUES ('${iterator}')`,
+        `INSERT INTO public.outbreak_category VALUES ('${iterator.id}', '${iterator.name}')`,
       );
     }
   }
