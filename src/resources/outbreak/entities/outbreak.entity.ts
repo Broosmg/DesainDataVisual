@@ -10,7 +10,7 @@ import { PrimaryColumn, Column, Entity } from 'typeorm';
 @Entity({ name: 'outbreak' })
 export class Outbreak extends BaseEntity implements BaseEntityInterface {
   @Field()
-  @PrimaryColumn('uuid', { name: 'outbreak_category_id' })
+  @PrimaryColumn('uuid', { name: 'outbreak_id' })
   id: string;
 
   @Field()
