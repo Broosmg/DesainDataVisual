@@ -10,13 +10,8 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <title>{{ title }}</title>
   <style>
-    * {
-      box-shadow: none !important;
-      border: 0;
-    }
     #outbreakCategories > div > div:hover {
       background-color: #f8f9fa;
-      /* border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important; */
     }
     .leaflet-control-zoom {
       display: none;
@@ -25,12 +20,12 @@
       z-index: 500;
     }
     .btn-light, .card {
-      background-color: rgba(255, 255, 255, 0.6) !important;
-      backdrop-filter: blur(10px) !important;
+      background-color: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
     }
     .btn-light:hover {
-      background-color: rgba(255, 255, 255, 0.8) !important;
-      backdrop-filter: blur(10px) !important;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
     }
   </style>
 </head>
@@ -60,7 +55,7 @@
     </button>
 
     <div class="card position-fixed shadow-sm index-top invisible" id="detailCard" style="top: 20px; right: 20px; width: 300px;">
-      <div class="card-header border-0">
+      <div class="card-header">
         Detail
         <button type="button" class="btn-close float-end" id="closeDetailCard"></button>
       </div>
