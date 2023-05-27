@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <title>{{ title }}</title>
   <style>
+    * {
+      outline: none;
+      box-shadow: none !important;
+    }
     #outbreakCategories > div > div:hover {
       background-color: #f8f9fa;
     }
@@ -27,13 +31,24 @@
       background-color: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(10px);
     }
+    article input {
+      position: absolute;
+      width: 100%;
+      height: 102px;
+      opacity: 0;
+      cursor: pointer;
+    }
+    input[type=checkbox]:checked ~ div, input:focus {
+      --bs-border-opacity: 1;
+      border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+    }
   </style>
 </head>
 <body>
-    <div class="card py-4 px-5 position-fixed shadow-sm index-top rounded-4" style="width: 450px; top: 20px; bottom: 20px; left: 20px;">
+    <div class="card py-4 px-5 position-fixed shadow index-top rounded-4 border-0" style="width: 450px; top: 20px; bottom: 20px; left: 20px;">
       <h2 class="text-secondary-emphasis">{{ title }}</h2>
 
-      <div class="container mt-4">
+      <div class="container mt-4" style="height: 100%; overflow: auto;">
         <div class="row mb-4 g-2" id="outbreakCategories"></div>
 
         <div>
@@ -50,22 +65,20 @@
       </div>
     </div>
 
-    <button type="button" class="btn btn-light rounded-4 position-fixed shadow-sm index-top" id="detail" style="top: 20px; right: 20px;">
+    <button type="button" class="btn btn-light rounded-4 position-fixed shadow index-top" id="detailButton" style="top: 20px; right: 20px;">
       Detail
     </button>
 
-    <div class="card position-fixed shadow-sm index-top invisible" id="detailCard" style="top: 20px; right: 20px; width: 300px;">
+    <div class="card position-fixed shadow index-top invisible border-0" id="detailCard" style="top: 20px; right: 20px; width: 300px;">
       <div class="card-header">
         Detail
         <button type="button" class="btn-close float-end" id="closeDetailCard"></button>
       </div>
 
-      <div class="card-body">
-        <p class="card-text">This is a sample card with a close button.</p>
-      </div>
+      <div class="card-body" id="cardBody"></div>
     </div>
 
-    <button type="button" class="btn btn-light rounded-circle position-fixed shadow-sm index-top" id="myLoction" data-bs-toggle="tooltip" title="Lokasi saya" style="bottom: 20px; right: 20px;">
+    <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="myLoction" data-bs-toggle="tooltip" title="Lokasi saya" style="bottom: 20px; right: 20px;">
       <i class="fas fa-map-marker-alt"></i>
     </button>
 
@@ -78,12 +91,17 @@
   <script>
     $(document).ready(function() {
       const map = L.map('map').setView([-6.200000, 106.816666], 13);
-      let data = {
+      let internalData = {
         provinceId: 31,
         cityId: [],
-        districtId: []
+        districtId: [],
+        outbreakCategoryId: [],
+        outbreaks: [],
+        outbreakLevels: [],
+        outbreakCategories: []
       };
 
+      outbreakLevels();
       outbreakCategories();
       generatePin();
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -93,13 +111,26 @@
         maxZoom: 18
       }).addTo(map);
 
-      $('#detail').click(function () {
+      $('#detailButton').click(function () {
+        let element = '';
+
+        for (const iterator1 of internalData.outbreakLevels) {
+          element += `<h5 class="card-title">${iterator1.name}</h5>`;
+
+          for (const iterator2 of internalData.outbreakCategories) {
+            element += `<p class="card-text">Total ${iterator2.name}: ${internalData.outbreaks.filter(value => value.outbreakLevel.id == iterator1.id && value.outbreakCategory.id == iterator2.id).length} orang</p>`;
+          }
+        }
+
         $('#detailCard').removeClass('invisible');
-      })
+        $('#detailButton').addClass('invisible');
+        $('#cardBody').html(element);
+      });
 
       $('#closeDetailCard').click(function () {
         $('#detailCard').addClass('invisible');
-      })
+        $('#detailButton').removeClass('invisible');
+      });
 
       $('#myLoction').click(function () {
         if (navigator.geolocation) {
@@ -108,10 +139,26 @@
 
             map.setView([coords.latitude, coords.latitude], 15);
           });
-        } else {
-          console.log('Geolocation is not supported by this browser.');
         }
       });
+
+      function outbreakLevels() {
+        const query = `query {
+          outbreakLevels {
+            id
+            name
+          }
+        }`;
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            internalData.outbreakLevels = data.data.outbreakLevels;
+          }
+        });
+      }
 
       function outbreakCategories() {
         const query = `query {
@@ -126,16 +173,38 @@
           contentType: 'application/json',
           data: JSON.stringify({ query: query }),
           success: function (data) {
-            for (const iterator of data.data.outbreakCategories) {
-              $("#outbreakCategories").append(`<div class="col">
-                <div class="card rounded-4" style="cursor: pointer;">
-                  <div class="card-body text-center">
-                    <small>${iterator.name}</small>
+            internalData.outbreakCategories = data.data.outbreakCategories;
+
+            for (const iterator of internalData.outbreakCategories) {
+              const element = $(`<div class="col">
+                <article>
+                  <input type="checkbox" id="category" data-id="${iterator.id}" value="${iterator.id}">
+                  <div class="rounded-4 border">
+                    <div class="card-body text-center">
+                      <small>${iterator.name}</small>
+                    </div>
                   </div>
-                </div>
+                </article>
               </div>`);
+
+              $("#outbreakCategories").append(element);
+              addClick(element);
             }
           }
+        });
+      }
+
+      function addClick(element) {
+        $(element).click(function () {
+          const id = $(element).find('input').attr('value');
+
+          if (internalData.outbreakCategoryId.filter(value => value == id).length) {
+            internalData.outbreakCategoryId = internalData.outbreakCategoryId.filter(value => value != id);
+          } else {
+            internalData.outbreakCategoryId.push(id);
+          }
+
+          generatePin();
         });
       }
 
@@ -153,7 +222,17 @@
             contentType: 'application/json',
             data: JSON.stringify({ query: query }),
             success: function (data) {
-              response(changeKeyName(data.data.cities, 'name', 'label'));
+              const temp = [];
+
+              for (const iterator of data.data.cities) {
+                if (internalData.cityId.filter(value => value == iterator.id).length) {
+                  continue;
+                }
+
+                temp.push(iterator);
+              }
+
+              response(changeKeyName(temp.length ? temp : data.data.cities, 'name', 'label'));
             }
           });
         },
@@ -165,15 +244,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>`);
 
-          data.cityId.push(id);
+          internalData.cityId.push(id);
           $("#city").val("");
           $("#cities").append(element);
-          $("#districtPanel").removeClass("d-none")
+          $("#districtPanel").removeClass("d-none");
           $(element).click(function () {
-            data.cityId = data.cityId.filter(value => value != $(this).attr('data-id'));
+            internalData.cityId = internalData.cityId.filter(value => value != $(this).attr('data-id'));
 
-            if (!data.cityId.length) {
-              $("#districtPanel").addClass("d-none")
+            if (!internalData.cityId.length) {
+              internalData.districtId = [];
+
+              $("#districtPanel").addClass("d-none");
+              generatePin();
             }
           });
           return false;
@@ -183,7 +265,7 @@
       $("#district").autocomplete({
         source: function (request, response) {
           const query = `query {
-            districts(query: "${$("#district").val()}", cityId: "${data.cityId.join(',')}") {
+            districts(query: "${$("#district").val()}", cityId: "${internalData.cityId.join(',')}") {
               id
               name
             }
@@ -194,7 +276,17 @@
             contentType: 'application/json',
             data: JSON.stringify({ query: query }),
             success: function (data) {
-              response(changeKeyName(data.data.districts, 'name', 'label'));
+              const temp = [];
+
+              for (const iterator of data.data.districts) {
+                if (internalData.districtId.filter(value => value == iterator.id).length) {
+                  continue;
+                }
+
+                temp.push(iterator);
+              }
+
+              response(changeKeyName(temp.length ? temp : data.data.districts, 'name', 'label'));
             }
           });
         },
@@ -206,12 +298,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>`);
 
-          data.districtId.push(id);
+          internalData.districtId.push(id);
           $("#district").val("");
           $("#districts").append(element);
           generatePin();
           $(element).click(function () {
-            data.districtId = data.districtId.filter(value => value != $(this).attr('data-id'));
+            internalData.districtId = internalData.districtId.filter(value => value != $(this).attr('data-id'));
 
             generatePin();
           });
@@ -221,12 +313,21 @@
 
       function generatePin() {
         const query = `query {
-          outbreaks(districtId: "${data.districtId.join(',')}") {
+          outbreaks(districtId: "${internalData.districtId.join(',')}", outbreakCategoryId: "${internalData.outbreakCategoryId.join(',')}") {
             latitude
             longitude
             radius
             outbreakLevel {
+              id
+              name
               indicatorColor
+            }
+            outbreakCategory {
+              id
+              name
+            }
+            district {
+              name
             }
           }
         }`;
@@ -236,13 +337,15 @@
           contentType: 'application/json',
           data: JSON.stringify({ query: query }),
           success: function (data) {
+            internalData.outbreaks = data.data.outbreaks;
+
             map.eachLayer(function (layer) {
               if (layer instanceof L.Circle) {
                 map.removeLayer(layer);
               }
             });
 
-            for (const iterator of data.data.outbreaks) {
+            for (const iterator of internalData.outbreaks) {
               L.circle([iterator.latitude, iterator.longitude], {
                 radius: iterator.radius * 100,
                 fillColor: iterator.outbreakLevel.indicatorColor,
@@ -271,17 +374,6 @@
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
-    const toastTrigger = document.getElementById('liveToastBtn');
-    const toastLiveExample = document.getElementById('liveToast');
-
-    if (toastTrigger) {
-      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-
-      toastTrigger.addEventListener('click', () => {
-        toastBootstrap.show();
-      });
-    }
   </script>
 </body>
 </html>
