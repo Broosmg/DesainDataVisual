@@ -24,6 +24,14 @@ export class District1684742345501 implements MigrationInterface {
             length: '255',
           },
           {
+            name: 'latitude',
+            type: 'double precision',
+          },
+          {
+            name: 'longitude',
+            type: 'double precision',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',

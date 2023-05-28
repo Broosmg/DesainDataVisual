@@ -13,8 +13,6 @@ import { UpdateOutbreakInput } from './dto/update-outbreak.input';
 import { GetOutbreakArgs } from './dto/get-outbreak.args';
 import { OutbreakCategory } from '../outbreak-category/entities/outbreak-category.entity';
 import { OutbreakCategoryService } from '../outbreak-category/outbreak-category.service';
-import { OutbreakLevel } from '../outbreak-level/entities/outbreak-level.entity';
-import { OutbreakLevelService } from '../outbreak-level/outbreak-level.service';
 import { DistrictService } from '../district/district.service';
 import { District } from '../district/entities/district.entity';
 
@@ -24,7 +22,6 @@ export class OutbreakResolver {
     private readonly outbreakService: OutbreakService,
     private readonly districtService: DistrictService,
     private readonly outbreakCategoryService: OutbreakCategoryService,
-    private readonly outbreakLevelService: OutbreakLevelService,
   ) {}
 
   @Mutation(() => Outbreak)
@@ -40,7 +37,7 @@ export class OutbreakResolver {
   }
 
   @Query(() => Outbreak, { name: 'outbreak', nullable: true })
-  findOne(@Args('id') id: string) {
+  findOne(@Args('id') id: number) {
     return this.outbreakService.findOne(id);
   }
 
@@ -55,7 +52,7 @@ export class OutbreakResolver {
   }
 
   @Mutation(() => Outbreak)
-  removeOutbreak(@Args('id') id: string) {
+  removeOutbreak(@Args('id') id: number) {
     return this.outbreakService.remove(id);
   }
 
@@ -67,10 +64,5 @@ export class OutbreakResolver {
   @ResolveField(() => OutbreakCategory)
   outbreakCategory(@Parent() outbreak: Outbreak) {
     return this.outbreakCategoryService.findOne(outbreak.outbreakCategoryId);
-  }
-
-  @ResolveField(() => OutbreakLevel)
-  outbreakLevel(@Parent() outbreak: Outbreak) {
-    return this.outbreakLevelService.findOne(outbreak.outbreakLevelId);
   }
 }

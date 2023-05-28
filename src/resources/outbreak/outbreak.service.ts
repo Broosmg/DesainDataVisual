@@ -24,12 +24,8 @@ export class OutbreakService {
 
     if (getOutbreakArgs.outbreakCategoryId) {
       query.where(
-        `outbreak_category_id = '${getOutbreakArgs.outbreakCategoryId}'`,
+        `outbreak_category_id in (${getOutbreakArgs.outbreakCategoryId})`,
       );
-    }
-
-    if (getOutbreakArgs.outbreakLevelId) {
-      query.where(`outbreak_level_id = '${getOutbreakArgs.outbreakLevelId}'`);
     }
 
     if (getOutbreakArgs.districtId) {
@@ -50,11 +46,11 @@ export class OutbreakService {
       .getMany();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.outbreakRepository.findOneBy({ id: id });
   }
 
-  async update(id: string, updateOutbreakInput: UpdateOutbreakInput) {
+  async update(id: number, updateOutbreakInput: UpdateOutbreakInput) {
     const provinceData = await this.outbreakRepository.preload({
       id: id,
       ...updateOutbreakInput,
@@ -63,7 +59,7 @@ export class OutbreakService {
     return this.outbreakRepository.save(provinceData);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.outbreakRepository.softDelete(id);
   }
 }

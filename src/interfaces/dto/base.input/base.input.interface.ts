@@ -1,3 +1,3 @@
 export interface BaseInputInterface {
-  id: string | number;
+  id: number;
 }

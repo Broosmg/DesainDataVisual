@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import * as csv from 'csv-parser';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -12,29 +11,21 @@ export class Outbreak1684742337036 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_id',
-            type: 'uuid',
-            default: 'uuid_generate_v4()',
+            type: 'bigint',
             isPrimary: true,
+            isGenerated: true,
           },
           {
             name: 'outbreak_category_id',
-            type: 'uuid',
+            type: 'bigint',
           },
           {
-            name: 'outbreak_level_id',
-            type: 'uuid',
+            name: 'sufferer',
+            type: 'bigint',
           },
           {
-            name: 'latitude',
-            type: 'double precision',
-          },
-          {
-            name: 'longitude',
-            type: 'double precision',
-          },
-          {
-            name: 'radius',
-            type: 'double precision',
+            name: 'dead',
+            type: 'bigint',
           },
           {
             name: 'district_id',
@@ -74,11 +65,7 @@ export class Outbreak1684742337036 implements MigrationInterface {
       .on('data', async (row: any) => {
         if (row) {
           await queryRunner.query(
-            `INSERT INTO outbreak VALUES ('${randomUUID()}', '${
-              row.outbreak_category_id
-            }', '${row.outbreak_level_id}', ${row.latitude}, ${
-              row.longitude
-            }, ${row.radius}, ${row.district_id})`,
+            `INSERT INTO outbreak VALUES (null, '${row.outbreak_category_id}', '${row.outbreak_level_id}', ${row.latitude}, ${row.longitude}, ${row.radius}, ${row.district_id})`,
           );
         }
       });

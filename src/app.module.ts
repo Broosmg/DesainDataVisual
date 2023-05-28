@@ -8,7 +8,6 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CityModule } from './resources/city/city.module';
 import { OutbreakModule } from './resources/outbreak/outbreak.module';
-import { OutbreakLevelModule } from './resources/outbreak-level/outbreak-level.module';
 import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-category.module';
 import { DistrictModule } from './resources/district/district.module';
 import { SecurityMiddleware } from './middleware/security/security.middleware';
@@ -28,7 +27,6 @@ import { SecurityMiddleware } from './middleware/security/security.middleware';
     CityModule,
     ProvinceModule,
     OutbreakModule,
-    OutbreakLevelModule,
     OutbreakCategoryModule,
     DistrictModule,
   ],

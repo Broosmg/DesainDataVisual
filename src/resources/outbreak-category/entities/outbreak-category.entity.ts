@@ -1,7 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
 import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
-import { PrimaryColumn, Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'outbreak_category' })
@@ -10,8 +10,8 @@ export class OutbreakCategory
   implements BaseEntityInterface
 {
   @Field()
-  @PrimaryColumn('uuid', { name: 'outbreak_category_id' })
-  id: string;
+  @PrimaryGeneratedColumn('increment', { name: 'outbreak_category_id' })
+  id: number;
 
   @Field()
   @Column({ name: 'outbreak_category_name' })

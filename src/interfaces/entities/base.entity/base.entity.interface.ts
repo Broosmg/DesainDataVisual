@@ -1,3 +1,3 @@
 export interface BaseEntityInterface {
-  id: string | number;
+  id: number;
 }
