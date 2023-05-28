@@ -42,6 +42,12 @@
       --bs-border-opacity: 1;
       border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
     }
+    .circle {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      float: right;
+    }
   </style>
 </head>
 <body>
@@ -65,21 +71,21 @@
       </div>
     </div>
 
-    <button type="button" class="btn btn-light rounded-4 position-fixed shadow index-top" id="detailButton" style="top: 20px; right: 20px;">
-      Detail
+    <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="informationButton" data-bs-toggle="tooltip" title="Informasi" style="top: 20px; right: 20px;">
+      <i class="fa-solid fa-circle-info"></i>
     </button>
 
-    <div class="card position-fixed shadow index-top invisible border-0" id="detailCard" style="top: 20px; right: 20px; width: 300px;">
+    <div class="card position-fixed shadow index-top invisible border-0" id="informationCard" style="top: 20px; right: 20px; width: 300px;">
       <div class="card-header">
-        Detail
-        <button type="button" class="btn-close float-end" id="closeDetailCard"></button>
+        Informasi
+        <button type="button" class="btn-close float-end" id="closeInformationCard"></button>
       </div>
 
       <div class="card-body" id="cardBody"></div>
     </div>
 
     <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="myLoction" data-bs-toggle="tooltip" title="Lokasi saya" style="bottom: 20px; right: 20px;">
-      <i class="fas fa-map-marker-alt"></i>
+      <i class="fa-solid fa-location-dot"></i>
     </button>
 
     <div class="col" id="map" style="height: 100vh;"></div>
@@ -111,25 +117,25 @@
         maxZoom: 18
       }).addTo(map);
 
-      $('#detailButton').click(function () {
+      $('#informationButton').click(function () {
         let element = '';
 
         for (const iterator1 of internalData.outbreakLevels) {
-          element += `<h5 class="card-title">${iterator1.name}</h5>`;
+          element += `<h5 class="card-title">${iterator1.name} <div class="circle" style="background-color: ${iterator1.indicatorColor}"></div></h5>`;
 
           for (const iterator2 of internalData.outbreakCategories) {
-            element += `<p class="card-text">Total ${iterator2.name}: ${internalData.outbreaks.filter(value => value.outbreakLevel.id == iterator1.id && value.outbreakCategory.id == iterator2.id).length} orang</p>`;
+            element += `<p class="card-text">Total ${iterator2.name}: ${internalData.outbreaks.filter(value => value.outbreakLevel.id == iterator1.id && value.outbreakCategory.id == iterator2.id).length} kecamatan</p>`;
           }
         }
 
-        $('#detailCard').removeClass('invisible');
-        $('#detailButton').addClass('invisible');
+        $('#informationCard').removeClass('invisible');
+        $('#informationButton').addClass('invisible');
         $('#cardBody').html(element);
       });
 
-      $('#closeDetailCard').click(function () {
-        $('#detailCard').addClass('invisible');
-        $('#detailButton').removeClass('invisible');
+      $('#closeInformationCard').click(function () {
+        $('#informationCard').addClass('invisible');
+        $('#informationButton').removeClass('invisible');
       });
 
       $('#myLoction').click(function () {
@@ -147,6 +153,7 @@
           outbreakLevels {
             id
             name
+            indicatorColor
           }
         }`;
         $.ajax({
