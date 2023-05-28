@@ -45,8 +45,6 @@
     .circle {
       width: 25px;
       height: 25px;
-      border-radius: 50%;
-      float: right;
     }
   </style>
 </head>
@@ -121,7 +119,7 @@
         let element = '';
 
         for (const iterator1 of internalData.outbreakLevels) {
-          element += `<h5 class="card-title">${iterator1.name} <div class="circle" style="background-color: ${iterator1.indicatorColor}"></div></h5>`;
+          element += `<h5 class="card-title">${iterator1.name} <div class="circle rounded-circle float-end" style="background-color: ${iterator1.indicatorColor}"></div></h5>`;
 
           for (const iterator2 of internalData.outbreakCategories) {
             element += `<p class="card-text">Total ${iterator2.name}: ${internalData.outbreaks.filter(value => value.outbreakLevel.id == iterator1.id && value.outbreakCategory.id == iterator2.id).length} kecamatan</p>`;
