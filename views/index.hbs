@@ -83,7 +83,7 @@
     </div>
 
     <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="myLoction" data-bs-toggle="tooltip" title="Lokasi saya" style="bottom: 20px; right: 20px;">
-      <i class="fa-solid fa-location-dot"></i>
+      <i class="fa-solid fa-location-crosshairs"></i>
     </button>
 
     <div class="col" id="map" style="height: 100vh;"></div>
@@ -288,13 +288,12 @@
       function generatePin() {
         const query = `query {
           outbreaks(districtId: "${internalData.districtId.join(',')}", outbreakCategoryId: "${internalData.outbreakCategoryId.join(',')}") {
-            latitude
-            longitude
-            radius
             outbreakCategory {
               id
               name
             }
+            sufferer
+            dead
             district {
               name
             }
@@ -326,10 +325,9 @@
 
             for (const iterator of internalData.outbreakCategories) {
               const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
-
-              element += `<h5 class="card-title">${iterator1.name}</h5>`;
-              element += `<p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue)} orang</p>`;
-              element += `<p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue)} orang</p>`;
+              element += `<h5 class="card-title">${iterator.name}</h5>`;
+              element += `<p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
+              element += `<p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
             }
 
             $('#cardBody').html(element);
