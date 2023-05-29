@@ -342,6 +342,10 @@
             });
 
             for (const iterator1 of internalData.outbreaks) {
+              if (iterator1.sufferer == 0 && iterator1.dead == 0) {
+                continue;
+              }
+
               for (const iterator2 of iterator1.district.locations) {
                 markers.push({
                   coords: [iterator2.latitude, iterator2.longitude],
