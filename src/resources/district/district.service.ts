@@ -31,11 +31,11 @@ export class DistrictService {
     }
 
     if (getDistrictArgs.startAt) {
-      query.where(`created_at >= '${getDistrictArgs.startAt}'`);
+      query.where(`date(created_at) >= '${getDistrictArgs.startAt}'`);
     }
 
     if (getDistrictArgs.endAt) {
-      query.where(`created_at <= '${getDistrictArgs.endAt}'`);
+      query.where(`date(created_at) <= '${getDistrictArgs.endAt}'`);
     }
 
     return query

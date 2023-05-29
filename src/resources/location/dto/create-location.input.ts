@@ -1,8 +1,13 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { Column } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @InputType()
+@Entity({ name: 'location' })
 export class CreateLocationInput {
+  @Field()
+  @Column({ name: 'district_id' })
+  districtId: number;
+
   @Field()
   @Column({ type: 'double precision' })
   latitude: number;

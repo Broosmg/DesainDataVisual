@@ -22,12 +22,16 @@ export class LocationService {
   findAll(getLocationArgs: GetLocationArgs) {
     const query = this.locationRepository.createQueryBuilder();
 
+    if (getLocationArgs.districtId) {
+      query.where(`district_id in (${getLocationArgs.districtId})`);
+    }
+
     if (getLocationArgs.startAt) {
-      query.where(`created_at >= '${getLocationArgs.startAt}'`);
+      query.where(`date(created_at) >= '${getLocationArgs.startAt}'`);
     }
 
     if (getLocationArgs.endAt) {
-      query.where(`created_at <= '${getLocationArgs.endAt}'`);
+      query.where(`date(created_at) <= '${getLocationArgs.endAt}'`);
     }
 
     return query

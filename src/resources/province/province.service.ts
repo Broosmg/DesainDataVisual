@@ -27,11 +27,11 @@ export class ProvinceService {
     }
 
     if (getProvinceArgs.startAt) {
-      query.where(`created_at >= '${getProvinceArgs.startAt}'`);
+      query.where(`date(created_at) >= '${getProvinceArgs.startAt}'`);
     }
 
     if (getProvinceArgs.endAt) {
-      query.where(`created_at <= '${getProvinceArgs.endAt}'`);
+      query.where(`date(created_at) <= '${getProvinceArgs.endAt}'`);
     }
 
     return query

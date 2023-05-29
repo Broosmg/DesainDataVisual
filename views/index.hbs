@@ -69,6 +69,8 @@
       </div>
     </div>
 
+    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="date" data-bs-toggle="tooltip" title="Cari Bulan" style="top: 20px; right: 80px; width: 150px;">
+
     <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="informationButton" data-bs-toggle="tooltip" title="Informasi" style="top: 20px; right: 20px;">
       <i class="fa-solid fa-circle-info"></i>
     </button>
@@ -91,9 +93,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
   <script>
     $(document).ready(function() {
+      let date = moment();
       const map = L.map('map').setView([-6.200000, 106.816666], 13);
       let internalData = {
         provinceId: 31,
@@ -101,9 +105,12 @@
         districtId: [],
         outbreakCategoryId: [],
         outbreaks: [],
-        outbreakCategories: []
+        outbreakCategories: [],
+        startAt: date.format('YYYY-MM-1'),
+        endAt: date.endOf('month').format('YYYY-MM-DD')
       };
 
+      generatePin();
       outbreakCategories();
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -120,6 +127,13 @@
       $('#closeInformationCard').click(function () {
         $('#informationCard').addClass('invisible');
         $('#informationButton').removeClass('invisible');
+      });
+
+      $('#date').change(function () {
+        date = moment($(this).val());
+
+        console.log(date.format('YYYY-MM-DD'));
+        console.log(date.endOf('month').format('YYYY-MM-DD'));
       });
 
       $('#myLoction').click(function () {
@@ -296,6 +310,10 @@
             dead
             district {
               name
+              locations {
+                latitude
+                longitude
+              }
             }
           }
         }`;
@@ -314,13 +332,17 @@
               }
             });
 
-            for (const iterator of internalData.outbreaks) {
-              L.circle([iterator.latitude, iterator.longitude], {
-                radius: iterator.radius * 100,
-                fillColor: iterator.outbreakLevel.indicatorColor,
-                color: iterator.outbreakLevel.indicatorColor,
-                weight: 0
-              }).addTo(map);
+            for (const iterator1 of internalData.outbreaks) {
+              for (const iterator2 of iterator1.district.locations) {
+                const color = '#B70404';
+
+                L.circle([iterator2.latitude, iterator2.longitude], {
+                  radius: 5 * 100,
+                  fillColor: color,
+                  color: color,
+                  weight: 0
+                }).addTo(map);
+              }
             }
 
             for (const iterator of internalData.outbreakCategories) {

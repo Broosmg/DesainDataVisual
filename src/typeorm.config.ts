@@ -13,4 +13,5 @@ export const config: TypeOrmModuleOptions = {
   password: configService.get<string>('DB_PASSWORD') || 'password',
   database: configService.get<string>('DB_NAME') || 'your_database_name',
   entities: [join(__dirname, '**/*.entity.js')],
+  timezone: 'GMT+7',
 };

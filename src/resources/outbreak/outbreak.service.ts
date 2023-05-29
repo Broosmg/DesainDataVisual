@@ -33,11 +33,11 @@ export class OutbreakService {
     }
 
     if (getOutbreakArgs.startAt) {
-      query.where(`created_at >= '${getOutbreakArgs.startAt}'`);
+      query.where(`date(created_at) >= '${getOutbreakArgs.startAt}'`);
     }
 
     if (getOutbreakArgs.endAt) {
-      query.where(`created_at <= '${getOutbreakArgs.endAt}'`);
+      query.where(`date(created_at) <= '${getOutbreakArgs.endAt}'`);
     }
 
     return query

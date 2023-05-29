@@ -33,11 +33,11 @@ export class CityService {
     }
 
     if (getCityArgs.startAt) {
-      query.where(`created_at >= '${getCityArgs.startAt}'`);
+      query.where(`date(created_at) >= '${getCityArgs.startAt}'`);
     }
 
     if (getCityArgs.endAt) {
-      query.where(`created_at <= '${getCityArgs.endAt}'`);
+      query.where(`date(created_at) <= '${getCityArgs.endAt}'`);
     }
 
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();

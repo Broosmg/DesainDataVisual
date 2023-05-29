@@ -1,6 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
 import { City } from 'src/resources/city/entities/city.entity';
+import { Location } from 'src/resources/location/entities/location.entity';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
@@ -20,4 +21,7 @@ export class District extends BaseEntity implements BaseEntityInterface {
   @Field()
   @Column({ name: 'district_name' })
   name: string;
+
+  @Field(() => [Location])
+  locations: Location[];
 }

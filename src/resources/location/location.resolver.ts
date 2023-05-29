@@ -16,7 +16,7 @@ export class LocationResolver {
     return this.locationService.create(createLocationInput);
   }
 
-  @Query(() => [Location], { name: 'location' })
+  @Query(() => [Location], { name: 'locations' })
   findAll(@Args() getLocationArgs: GetLocationArgs) {
     return this.locationService.findAll(getLocationArgs);
   }
