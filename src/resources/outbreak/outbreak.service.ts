@@ -23,21 +23,25 @@ export class OutbreakService {
     const query = this.outbreakRepository.createQueryBuilder();
 
     if (getOutbreakArgs.outbreakCategoryId) {
-      query.where(
+      query.andWhere(
         `outbreak_category_id in (${getOutbreakArgs.outbreakCategoryId})`,
       );
     }
 
     if (getOutbreakArgs.districtId) {
-      query.where(`district_id in (${getOutbreakArgs.districtId})`);
+      query.andWhere(`district_id in (${getOutbreakArgs.districtId})`);
     }
 
     if (getOutbreakArgs.startAt) {
-      query.where(`date(created_at) >= '${getOutbreakArgs.startAt}'`);
+      query.andWhere(
+        `date(created_at) >= '${getOutbreakArgs.startAt.toISOString()}'`,
+      );
     }
 
     if (getOutbreakArgs.endAt) {
-      query.where(`date(created_at) <= '${getOutbreakArgs.endAt}'`);
+      query.andWhere(
+        `date(created_at) <= '${getOutbreakArgs.endAt.toISOString()}'`,
+      );
     }
 
     return query

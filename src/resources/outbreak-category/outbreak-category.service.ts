@@ -23,17 +23,21 @@ export class OutbreakCategoryService {
     const query = this.outbreakCategoryRepository.createQueryBuilder();
 
     if (getOutbreakCategoryArgs.query) {
-      query.where(
+      query.andWhere(
         `lower(outbreak_category_name) LIKE '%${getOutbreakCategoryArgs.query}%'`,
       );
     }
 
     if (getOutbreakCategoryArgs.startAt) {
-      query.where(`date(created_at) >= '${getOutbreakCategoryArgs.startAt}'`);
+      query.andWhere(
+        `date(created_at) >= '${getOutbreakCategoryArgs.startAt.toISOString()}'`,
+      );
     }
 
     if (getOutbreakCategoryArgs.endAt) {
-      query.where(`date(created_at) <= '${getOutbreakCategoryArgs.endAt}'`);
+      query.andWhere(
+        `date(created_at) <= '${getOutbreakCategoryArgs.endAt.toISOString()}'`,
+      );
     }
 
     return query

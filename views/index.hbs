@@ -69,7 +69,8 @@
       </div>
     </div>
 
-    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="date" data-bs-toggle="tooltip" title="Cari Bulan" style="top: 20px; right: 80px; width: 150px;">
+    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="startDate" data-bs-toggle="tooltip" title="Cari dari Bulan" style="top: 20px; right: 245px; width: 150px;">
+    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="endDate" data-bs-toggle="tooltip" title="Cari sampai Bulan" style="top: 20px; right: 80px; width: 150px;">
 
     <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="informationButton" data-bs-toggle="tooltip" title="Informasi" style="top: 20px; right: 20px;">
       <i class="fa-solid fa-circle-info"></i>
@@ -106,10 +107,12 @@
         outbreakCategoryId: [],
         outbreaks: [],
         outbreakCategories: [],
-        startAt: date.format('YYYY-MM-1'),
+        startAt: date.format('YYYY-MM-01'),
         endAt: date.endOf('month').format('YYYY-MM-DD')
       };
 
+      $('#startDate').val(moment(internalData.startAt).format('YYYY-MM'));
+      $('#endDate').val(moment(internalData.startAt).format('YYYY-MM'));
       generatePin();
       outbreakCategories();
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -129,11 +132,16 @@
         $('#informationButton').removeClass('invisible');
       });
 
-      $('#date').change(function () {
-        date = moment($(this).val());
+      $('#startDate').change(function () {
+        internalData.startAt = moment($(this).val()).format('YYYY-MM-DD');
 
-        console.log(date.format('YYYY-MM-DD'));
-        console.log(date.endOf('month').format('YYYY-MM-DD'));
+        generatePin();
+      });
+
+      $('#endAt').change(function () {
+        internalData.endAt = moment($(this).val()).endOf('month').format('YYYY-MM-DD');
+
+        generatePin();
       });
 
       $('#myLoction').click(function () {
@@ -301,7 +309,7 @@
 
       function generatePin() {
         const query = `query {
-          outbreaks(districtId: "${internalData.districtId.join(',')}", outbreakCategoryId: "${internalData.outbreakCategoryId.join(',')}") {
+          outbreaks(districtId: "${internalData.districtId.join(',')}", outbreakCategoryId: "${internalData.outbreakCategoryId.join(',')}", startAt: "${internalData.startAt}", endAt: "${internalData.endAt}") {
             outbreakCategory {
               id
               name
@@ -324,32 +332,41 @@
           data: JSON.stringify({ query: query }),
           success: function (data) {
             internalData.outbreaks = data.data.outbreaks;
-            let element = '';
+            const color = '#B70404';
+            let element = '', markers = [];
 
             map.eachLayer(function (layer) {
-              if (layer instanceof L.Circle) {
+              if (layer instanceof L.CircleMarker) {
                 map.removeLayer(layer);
               }
             });
 
             for (const iterator1 of internalData.outbreaks) {
               for (const iterator2 of iterator1.district.locations) {
-                const color = '#B70404';
-
-                L.circle([iterator2.latitude, iterator2.longitude], {
-                  radius: 5 * 100,
-                  fillColor: color,
-                  color: color,
-                  weight: 0
-                }).addTo(map);
+                markers.push({
+                  coords: [iterator2.latitude, iterator2.longitude],
+                  info: `${iterator1.district.name}<br>
+                  Penderita: ${iterator1.sufferer}<br>
+                  Kematian: ${iterator1.dead}`
+                });
               }
             }
 
+            markers.forEach(function(marker) {
+              const circleMarker = L.circleMarker(marker.coords, {
+                radius: 10
+              }).addTo(map);
+
+              circleMarker.bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
+
             for (const iterator of internalData.outbreakCategories) {
               const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
-              element += `<h5 class="card-title">${iterator.name}</h5>`;
-              element += `<p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
-              element += `<p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
+              element += `<h5 class="card-title">${iterator.name}</h5>
+              <p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>
+              <p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
             }
 
             $('#cardBody').html(element);

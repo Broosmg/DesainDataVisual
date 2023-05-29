@@ -23,19 +23,23 @@ export class DistrictService {
     const query = this.districtRepository.createQueryBuilder();
 
     if (getDistrictArgs.query) {
-      query.where(`lower(district_name) LIKE '%${getDistrictArgs.query}%'`);
+      query.andWhere(`lower(district_name) LIKE '%${getDistrictArgs.query}%'`);
     }
 
     if (getDistrictArgs.cityId) {
-      query.where(`city_id in (${getDistrictArgs.cityId})`);
+      query.andWhere(`city_id in (${getDistrictArgs.cityId})`);
     }
 
     if (getDistrictArgs.startAt) {
-      query.where(`date(created_at) >= '${getDistrictArgs.startAt}'`);
+      query.andWhere(
+        `date(created_at) >= '${getDistrictArgs.startAt.toISOString()}'`,
+      );
     }
 
     if (getDistrictArgs.endAt) {
-      query.where(`date(created_at) <= '${getDistrictArgs.endAt}'`);
+      query.andWhere(
+        `date(created_at) <= '${getDistrictArgs.endAt.toISOString()}'`,
+      );
     }
 
     return query

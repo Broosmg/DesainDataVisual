@@ -23,15 +23,19 @@ export class ProvinceService {
     const query = this.provinceRepository.createQueryBuilder();
 
     if (getProvinceArgs.query) {
-      query.where(`lower(province_name) LIKE '%${getProvinceArgs.query}%'`);
+      query.andWhere(`lower(province_name) LIKE '%${getProvinceArgs.query}%'`);
     }
 
     if (getProvinceArgs.startAt) {
-      query.where(`date(created_at) >= '${getProvinceArgs.startAt}'`);
+      query.andWhere(
+        `date(created_at) >= '${getProvinceArgs.startAt.toISOString()}'`,
+      );
     }
 
     if (getProvinceArgs.endAt) {
-      query.where(`date(created_at) <= '${getProvinceArgs.endAt}'`);
+      query.andWhere(
+        `date(created_at) <= '${getProvinceArgs.endAt.toISOString()}'`,
+      );
     }
 
     return query

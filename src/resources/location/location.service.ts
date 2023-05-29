@@ -23,15 +23,19 @@ export class LocationService {
     const query = this.locationRepository.createQueryBuilder();
 
     if (getLocationArgs.districtId) {
-      query.where(`district_id in (${getLocationArgs.districtId})`);
+      query.andWhere(`district_id in (${getLocationArgs.districtId})`);
     }
 
     if (getLocationArgs.startAt) {
-      query.where(`date(created_at) >= '${getLocationArgs.startAt}'`);
+      query.andWhere(
+        `date(created_at) >= '${getLocationArgs.startAt.toISOString()}'`,
+      );
     }
 
     if (getLocationArgs.endAt) {
-      query.where(`date(created_at) <= '${getLocationArgs.endAt}'`);
+      query.andWhere(
+        `date(created_at) <= '${getLocationArgs.endAt.toISOString()}'`,
+      );
     }
 
     return query

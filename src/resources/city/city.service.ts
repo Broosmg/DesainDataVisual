@@ -23,21 +23,25 @@ export class CityService {
     const query = this.cityRepository.createQueryBuilder();
 
     if (getCityArgs.query) {
-      query.where(
+      query.andWhere(
         `lower(city_name) LIKE '%${getCityArgs.query.toLowerCase()}%'`,
       );
     }
 
     if (getCityArgs.provinceId) {
-      query.where(`province_id in (${getCityArgs.provinceId})`);
+      query.andWhere(`province_id in (${getCityArgs.provinceId})`);
     }
 
     if (getCityArgs.startAt) {
-      query.where(`date(created_at) >= '${getCityArgs.startAt}'`);
+      query.andWhere(
+        `date(created_at) >= '${getCityArgs.startAt.toISOString()}'`,
+      );
     }
 
     if (getCityArgs.endAt) {
-      query.where(`date(created_at) <= '${getCityArgs.endAt}'`);
+      query.andWhere(
+        `date(created_at) <= '${getCityArgs.endAt.toISOString()}'`,
+      );
     }
 
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
