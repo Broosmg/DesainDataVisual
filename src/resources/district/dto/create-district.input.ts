@@ -11,12 +11,4 @@ export class CreateDistrictInput {
   @Field()
   @Column({ name: 'district_name' })
   name: string;
-
-  @Field()
-  @Column({ type: 'double precision' })
-  latitude: number;
-
-  @Field()
-  @Column({ type: 'double precision' })
-  longitude: number;
 }

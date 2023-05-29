@@ -11,6 +11,7 @@ import { OutbreakModule } from './resources/outbreak/outbreak.module';
 import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-category.module';
 import { DistrictModule } from './resources/district/district.module';
 import { SecurityMiddleware } from './middleware/security/security.middleware';
+import { LocationModule } from './resources/location/location.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SecurityMiddleware } from './middleware/security/security.middleware';
     OutbreakModule,
     OutbreakCategoryModule,
     DistrictModule,
+    LocationModule,
   ],
   controllers: [AppController],
 })

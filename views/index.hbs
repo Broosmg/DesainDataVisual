@@ -101,13 +101,10 @@
         districtId: [],
         outbreakCategoryId: [],
         outbreaks: [],
-        outbreakLevels: [],
         outbreakCategories: []
       };
 
-      outbreakLevels();
       outbreakCategories();
-      generatePin();
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
           '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -116,19 +113,8 @@
       }).addTo(map);
 
       $('#informationButton').click(function () {
-        let element = '';
-
-        for (const iterator1 of internalData.outbreakLevels) {
-          element += `<h5 class="card-title">${iterator1.name} <div class="circle rounded-circle float-end" style="background-color: ${iterator1.indicatorColor}"></div></h5>`;
-
-          for (const iterator2 of internalData.outbreakCategories) {
-            element += `<p class="card-text">Total ${iterator2.name}: ${internalData.outbreaks.filter(value => value.outbreakLevel.id == iterator1.id && value.outbreakCategory.id == iterator2.id).length} kecamatan</p>`;
-          }
-        }
-
         $('#informationCard').removeClass('invisible');
         $('#informationButton').addClass('invisible');
-        $('#cardBody').html(element);
       });
 
       $('#closeInformationCard').click(function () {
@@ -146,25 +132,6 @@
         }
       });
 
-      function outbreakLevels() {
-        const query = `query {
-          outbreakLevels {
-            id
-            name
-            indicatorColor
-          }
-        }`;
-        $.ajax({
-          url: '/graphql',
-          method: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({ query: query }),
-          success: function (data) {
-            internalData.outbreakLevels = data.data.outbreakLevels;
-          }
-        });
-      }
-
       function outbreakCategories() {
         const query = `query {
           outbreakCategories {
@@ -179,6 +146,8 @@
           data: JSON.stringify({ query: query }),
           success: function (data) {
             internalData.outbreakCategories = data.data.outbreakCategories;
+
+            generatePin();
 
             for (const iterator of internalData.outbreakCategories) {
               const element = $(`<div class="col">
@@ -322,11 +291,6 @@
             latitude
             longitude
             radius
-            outbreakLevel {
-              id
-              name
-              indicatorColor
-            }
             outbreakCategory {
               id
               name
@@ -343,6 +307,7 @@
           data: JSON.stringify({ query: query }),
           success: function (data) {
             internalData.outbreaks = data.data.outbreaks;
+            let element = '';
 
             map.eachLayer(function (layer) {
               if (layer instanceof L.Circle) {
@@ -358,6 +323,16 @@
                 weight: 0
               }).addTo(map);
             }
+
+            for (const iterator of internalData.outbreakCategories) {
+              const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
+
+              element += `<h5 class="card-title">${iterator1.name}</h5>`;
+              element += `<p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue)} orang</p>`;
+              element += `<p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue)} orang</p>`;
+            }
+
+            $('#cardBody').html(element);
           }
         });
       }

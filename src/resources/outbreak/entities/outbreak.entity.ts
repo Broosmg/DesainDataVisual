@@ -20,11 +20,11 @@ export class Outbreak extends BaseEntity implements BaseEntityInterface {
   outbreakCategory: OutbreakCategory;
 
   @Field()
-  @Column({ name: 'sufferer' })
+  @Column()
   sufferer: number;
 
   @Field()
-  @Column({ name: 'dead' })
+  @Column()
   dead: number;
 
   @Field()

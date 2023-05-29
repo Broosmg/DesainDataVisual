@@ -38,12 +38,12 @@ export class OutbreakCategory1684742231828 implements MigrationInterface {
       }),
     );
     await queryRunner.query(
-      'CREATE INDEX outbreak_category_idx ON public.outbreak_category (outbreak_category_name)',
+      'CREATE INDEX outbreak_category_idx ON outbreak_category (outbreak_category_name)',
     );
 
     for (const iterator of categories) {
       await queryRunner.query(
-        `INSERT INTO public.outbreak_category VALUES (null, '${iterator}')`,
+        `INSERT INTO outbreak_category (outbreak_category_name) VALUES ('${iterator}')`,
       );
     }
   }
