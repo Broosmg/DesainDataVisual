@@ -138,7 +138,7 @@
         generatePin();
       });
 
-      $('#endAt').change(function () {
+      $('#endDate').change(function () {
         internalData.endAt = moment($(this).val()).endOf('month').format('YYYY-MM-DD');
 
         generatePin();
