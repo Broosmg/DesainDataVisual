@@ -40,4 +40,9 @@ export class ProvinceResolver {
   removeProvince(@Args('id') id: number) {
     return this.provinceService.remove(id);
   }
+
+  @Query(() => Number, { name: 'countProvince' })
+  count(@Args() getProvinceArgs: GetProvinceArgs) {
+    return this.provinceService.findAll(getProvinceArgs, true);
+  }
 }

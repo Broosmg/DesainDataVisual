@@ -46,6 +46,11 @@ export class CityResolver {
     return this.cityService.remove(id);
   }
 
+  @Query(() => Number, { name: 'countCity' })
+  count(@Args() getCityArgs: GetCityArgs) {
+    return this.cityService.findAll(getCityArgs, true);
+  }
+
   @ResolveField(() => Province)
   province(@Parent() city: City) {
     return this.provinceService.findOne(city.provinceId);

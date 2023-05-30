@@ -19,7 +19,7 @@ export class CityService {
     );
   }
 
-  findAll(getCityArgs: GetCityArgs) {
+  findAll(getCityArgs: GetCityArgs, count = false) {
     const query = this.cityRepository.createQueryBuilder();
 
     if (getCityArgs.query) {
@@ -42,6 +42,10 @@ export class CityService {
       query.andWhere(
         `date(created_at) <= '${getCityArgs.endAt.toISOString()}'`,
       );
+    }
+
+    if (count) {
+      return query.getCount();
     }
 
     return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();

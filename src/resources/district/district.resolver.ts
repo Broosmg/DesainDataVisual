@@ -62,6 +62,11 @@ export class DistrictResolver {
     return this.cityService.findOne(district.cityId);
   }
 
+  @Query(() => Number, { name: 'countDistrict' })
+  count(@Args() getDistrictArgs: GetDistrictArgs) {
+    return this.districtService.findAll(getDistrictArgs, true);
+  }
+
   @ResolveField(() => [Location])
   locations(
     @Parent() district: District,

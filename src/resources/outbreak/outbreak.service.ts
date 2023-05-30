@@ -19,7 +19,7 @@ export class OutbreakService {
     );
   }
 
-  findAll(getOutbreakArgs: GetOutbreakArgs) {
+  findAll(getOutbreakArgs: GetOutbreakArgs, count = false) {
     const query = this.outbreakRepository.createQueryBuilder();
 
     if (getOutbreakArgs.outbreakCategoryId) {
@@ -42,6 +42,10 @@ export class OutbreakService {
       query.andWhere(
         `date(created_at) <= '${getOutbreakArgs.endAt.toISOString()}'`,
       );
+    }
+
+    if (count) {
+      return query.getCount();
     }
 
     return query

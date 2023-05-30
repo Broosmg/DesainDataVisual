@@ -19,7 +19,7 @@ export class DistrictService {
     );
   }
 
-  findAll(getDistrictArgs: GetDistrictArgs) {
+  findAll(getDistrictArgs: GetDistrictArgs, count = false) {
     const query = this.districtRepository.createQueryBuilder();
 
     if (getDistrictArgs.query) {
@@ -40,6 +40,10 @@ export class DistrictService {
       query.andWhere(
         `date(created_at) <= '${getDistrictArgs.endAt.toISOString()}'`,
       );
+    }
+
+    if (count) {
+      return query.getCount();
     }
 
     return query

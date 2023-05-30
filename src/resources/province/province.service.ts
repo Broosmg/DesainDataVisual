@@ -19,7 +19,7 @@ export class ProvinceService {
     );
   }
 
-  findAll(getProvinceArgs: GetProvinceArgs) {
+  async findAll(getProvinceArgs: GetProvinceArgs, count = false) {
     const query = this.provinceRepository.createQueryBuilder();
 
     if (getProvinceArgs.query) {
@@ -36,6 +36,10 @@ export class ProvinceService {
       query.andWhere(
         `date(created_at) <= '${getProvinceArgs.endAt.toISOString()}'`,
       );
+    }
+
+    if (count) {
+      return query.getCount();
     }
 
     return query

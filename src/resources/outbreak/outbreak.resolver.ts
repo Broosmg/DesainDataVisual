@@ -56,6 +56,11 @@ export class OutbreakResolver {
     return this.outbreakService.remove(id);
   }
 
+  @Query(() => Number, { name: 'countOutbreak' })
+  count(@Args() getOutbreakArgs: GetOutbreakArgs) {
+    return this.outbreakService.findAll(getOutbreakArgs, true);
+  }
+
   @ResolveField(() => District)
   district(@Parent() outbreak: Outbreak) {
     return this.districtService.findOne(outbreak.districtId);

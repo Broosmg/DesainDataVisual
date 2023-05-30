@@ -19,7 +19,7 @@ export class LocationService {
     );
   }
 
-  findAll(getLocationArgs: GetLocationArgs) {
+  findAll(getLocationArgs: GetLocationArgs, count = false) {
     const query = this.locationRepository.createQueryBuilder();
 
     if (getLocationArgs.districtId) {
@@ -36,6 +36,10 @@ export class LocationService {
       query.andWhere(
         `date(created_at) <= '${getLocationArgs.endAt.toISOString()}'`,
       );
+    }
+
+    if (count) {
+      return query.getCount();
     }
 
     return query

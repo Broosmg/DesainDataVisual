@@ -21,7 +21,7 @@ export class LocationResolver {
     return this.locationService.findAll(getLocationArgs);
   }
 
-  @Query(() => Location, { name: 'location' })
+  @Query(() => Location, { name: 'location', nullable: true })
   findOne(@Args('id') id: number) {
     return this.locationService.findOne(id);
   }
@@ -39,5 +39,10 @@ export class LocationResolver {
   @Mutation(() => Location)
   removeLocation(@Args('id') id: number) {
     return this.locationService.remove(id);
+  }
+
+  @Query(() => Number, { name: 'countLocation' })
+  count(@Args() getLocationArgs: GetLocationArgs) {
+    return this.locationService.findAll(getLocationArgs, true);
   }
 }

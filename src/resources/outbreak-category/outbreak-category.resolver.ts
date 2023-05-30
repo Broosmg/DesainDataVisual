@@ -44,4 +44,9 @@ export class OutbreakCategoryResolver {
   removeOutbreakCategory(@Args('id') id: number) {
     return this.outbreakCategoryService.remove(id);
   }
+
+  @Query(() => Number, { name: 'countOutbreakCategories' })
+  count(@Args() getOutbreakCategoryArgs: GetOutbreakCategoryArgs) {
+    return this.outbreakCategoryService.findAll(getOutbreakCategoryArgs, true);
+  }
 }

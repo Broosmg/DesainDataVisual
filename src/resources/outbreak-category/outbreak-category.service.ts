@@ -19,7 +19,7 @@ export class OutbreakCategoryService {
     );
   }
 
-  findAll(getOutbreakCategoryArgs: GetOutbreakCategoryArgs) {
+  findAll(getOutbreakCategoryArgs: GetOutbreakCategoryArgs, count = false) {
     const query = this.outbreakCategoryRepository.createQueryBuilder();
 
     if (getOutbreakCategoryArgs.query) {
@@ -38,6 +38,10 @@ export class OutbreakCategoryService {
       query.andWhere(
         `date(created_at) <= '${getOutbreakCategoryArgs.endAt.toISOString()}'`,
       );
+    }
+
+    if (count) {
+      return query.getCount();
     }
 
     return query
