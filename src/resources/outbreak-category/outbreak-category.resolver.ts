@@ -25,7 +25,7 @@ export class OutbreakCategoryResolver {
   }
 
   @Query(() => OutbreakCategory, { name: 'outbreakCategory', nullable: true })
-  findOne(@Args('id') id: number) {
+  findOne(@Args('id') id: string) {
     return this.outbreakCategoryService.findOne(id);
   }
 
@@ -41,7 +41,7 @@ export class OutbreakCategoryResolver {
   }
 
   @Mutation(() => OutbreakCategory)
-  removeOutbreakCategory(@Args('id') id: number) {
+  removeOutbreakCategory(@Args('id') id: string) {
     return this.outbreakCategoryService.remove(id);
   }
 

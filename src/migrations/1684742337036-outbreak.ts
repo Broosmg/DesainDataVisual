@@ -11,13 +11,13 @@ export class Outbreak1684742337036 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_id',
-            type: 'bigint',
+            type: 'uuid',
             isPrimary: true,
-            isGenerated: true,
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'outbreak_category_id',
-            type: 'bigint',
+            type: 'uuid',
           },
           {
             name: 'sufferer',
@@ -65,7 +65,7 @@ export class Outbreak1684742337036 implements MigrationInterface {
       .on('data', async (row: any) => {
         if (row) {
           await queryRunner.query(
-            `INSERT INTO outbreak (outbreak_category_id, sufferer, dead, district_id, created_at) VALUES (${row.outbreak_category_id}, ${row.sufferer}, ${row.dead}, ${row.district_id}, '${row.created_at}')`,
+            `INSERT INTO outbreak (outbreak_category_id, sufferer, dead, district_id, created_at) VALUES ('${row.outbreak_category_id}', ${row.sufferer}, ${row.dead}, ${row.district_id}, '${row.created_at}')`,
           );
         }
       });

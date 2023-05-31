@@ -48,11 +48,11 @@ export class LocationService {
       .getMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.locationRepository.findOneBy({ id: id });
   }
 
-  async update(id: number, updateLocationInput: UpdateLocationInput) {
+  async update(id: string, updateLocationInput: UpdateLocationInput) {
     const provinceData = await this.locationRepository.preload({
       id: id,
       ...updateLocationInput,
@@ -61,7 +61,7 @@ export class LocationService {
     return this.locationRepository.save(provinceData);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.locationRepository.softDelete(id);
   }
 }

@@ -9,12 +9,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'outbreak' })
 export class Outbreak extends BaseEntity implements BaseInterface {
   @Field()
-  @PrimaryGeneratedColumn('increment', { name: 'outbreak_id' })
-  id: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'outbreak_id' })
+  id: string;
 
   @Field()
   @Column({ name: 'outbreak_category_id' })
-  outbreakCategoryId: number;
+  outbreakCategoryId: string;
 
   @Field()
   outbreakCategory: OutbreakCategory;

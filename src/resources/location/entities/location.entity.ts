@@ -1,13 +1,13 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseInterface } from 'src/interfaces/base/base.interface';
-import { PrimaryGeneratedColumn, Column, BaseEntity, Entity } from 'typeorm';
+import { Column, BaseEntity, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'location' })
 export class Location extends BaseEntity implements BaseInterface {
   @Field()
-  @PrimaryGeneratedColumn('increment', { name: 'location_id' })
-  id: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'location_id' })
+  id: string;
 
   @Field()
   @Column({ name: 'district_id' })

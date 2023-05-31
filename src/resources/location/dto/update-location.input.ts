@@ -1,6 +1,6 @@
-import { BaseInterface } from 'src/interfaces/base/base.interface';
 import { CreateLocationInput } from './create-location.input';
-import { InputType, Field, PartialType } from '@nestjs/graphql';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
+import { BaseInterface } from 'src/interfaces/base/base.interface';
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 @InputType()
@@ -9,6 +9,6 @@ export class UpdateLocationInput
   implements BaseInterface
 {
   @Field()
-  @PrimaryGeneratedColumn('increment', { name: 'location_id' })
-  id: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'location_id' })
+  id: string;
 }

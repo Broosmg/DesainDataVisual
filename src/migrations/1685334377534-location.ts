@@ -11,9 +11,9 @@ export class Location1685334377534 implements MigrationInterface {
         columns: [
           {
             name: 'location_id',
-            type: 'bigint',
+            type: 'uuid',
             isPrimary: true,
-            isGenerated: true,
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'district_id',

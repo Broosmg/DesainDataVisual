@@ -6,7 +6,7 @@ import { Column, Entity } from 'typeorm';
 export class CreateOutbreakInput {
   @Field()
   @Column({ name: 'outbreak_category_id' })
-  outbreakCategoryId: number;
+  outbreakCategoryId: string;
 
   @Field()
   @Column({ name: 'sufferer' })

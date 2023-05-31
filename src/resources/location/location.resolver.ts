@@ -22,7 +22,7 @@ export class LocationResolver {
   }
 
   @Query(() => Location, { name: 'location', nullable: true })
-  findOne(@Args('id') id: number) {
+  findOne(@Args('id') id: string) {
     return this.locationService.findOne(id);
   }
 
@@ -37,7 +37,7 @@ export class LocationResolver {
   }
 
   @Mutation(() => Location)
-  removeLocation(@Args('id') id: number) {
+  removeLocation(@Args('id') id: string) {
     return this.locationService.remove(id);
   }
 

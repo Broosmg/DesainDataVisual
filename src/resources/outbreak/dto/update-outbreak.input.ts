@@ -9,6 +9,6 @@ export class UpdateOutbreakInput
   implements BaseInterface
 {
   @Field()
-  @PrimaryGeneratedColumn('increment', { name: 'outbreak_id' })
-  id: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'outbreak_id' })
+  id: string;
 }

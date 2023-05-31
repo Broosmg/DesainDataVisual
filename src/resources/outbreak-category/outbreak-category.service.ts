@@ -50,12 +50,12 @@ export class OutbreakCategoryService {
       .getMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.outbreakCategoryRepository.findOneBy({ id: id });
   }
 
   async update(
-    id: number,
+    id: string,
     updateOutbreakCategoryInput: UpdateOutbreakCategoryInput,
   ) {
     const provinceData = await this.outbreakCategoryRepository.preload({
@@ -66,7 +66,7 @@ export class OutbreakCategoryService {
     return this.outbreakCategoryRepository.save(provinceData);
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.outbreakCategoryRepository.softDelete(id);
   }
 }
