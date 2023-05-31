@@ -1,4 +1,4 @@
-import { BaseInputInterface } from 'src/interfaces/dto/base.input/base.input.interface';
+import { BaseInterface } from 'src/interfaces/base/base.interface';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { CreateDistrictInput } from './create-district.input';
 import { Field, InputType, PartialType } from '@nestjs/graphql';
@@ -6,7 +6,7 @@ import { Field, InputType, PartialType } from '@nestjs/graphql';
 @InputType()
 export class UpdateDistrictInput
   extends PartialType(CreateDistrictInput)
-  implements BaseInputInterface
+  implements BaseInterface
 {
   @Field()
   @PrimaryGeneratedColumn('increment', { name: 'district_id' })

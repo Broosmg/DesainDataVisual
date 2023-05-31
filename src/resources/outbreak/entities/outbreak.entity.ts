@@ -1,13 +1,13 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
-import { BaseEntityInterface } from 'src/interfaces/entities/base.entity/base.entity.interface';
+import { BaseInterface } from 'src/interfaces/base/base.interface';
 import { District } from 'src/resources/district/entities/district.entity';
 import { OutbreakCategory } from 'src/resources/outbreak-category/entities/outbreak-category.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'outbreak' })
-export class Outbreak extends BaseEntity implements BaseEntityInterface {
+export class Outbreak extends BaseEntity implements BaseInterface {
   @Field()
   @PrimaryGeneratedColumn('increment', { name: 'outbreak_id' })
   id: number;
