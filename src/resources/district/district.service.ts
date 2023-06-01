@@ -23,7 +23,9 @@ export class DistrictService {
     const query = this.districtRepository.createQueryBuilder();
 
     if (getDistrictArgs.query) {
-      query.andWhere(`lower(district_name) LIKE '%${getDistrictArgs.query}%'`);
+      query.andWhere(
+        `lower(district_name) LIKE '%${getDistrictArgs.query.toLowerCase()}%'`,
+      );
     }
 
     if (getDistrictArgs.cityId) {

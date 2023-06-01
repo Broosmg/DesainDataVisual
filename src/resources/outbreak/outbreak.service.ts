@@ -23,11 +23,9 @@ export class OutbreakService {
     const query = this.outbreakRepository.createQueryBuilder();
 
     if (getOutbreakArgs.outbreakCategoryId) {
-      getOutbreakArgs.outbreakCategoryId
-        .split(',')
-        .forEach((value) =>
-          query.andWhere(`outbreak_category_id = '${value}'`),
-        );
+      query.andWhere(`outbreak_category_id in (:outbreakCategoryId)`, {
+        outbreakCategoryId: getOutbreakArgs.outbreakCategoryId.split(','),
+      });
     }
 
     if (getOutbreakArgs.districtId) {

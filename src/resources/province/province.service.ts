@@ -23,7 +23,9 @@ export class ProvinceService {
     const query = this.provinceRepository.createQueryBuilder();
 
     if (getProvinceArgs.query) {
-      query.andWhere(`lower(province_name) LIKE '%${getProvinceArgs.query}%'`);
+      query.andWhere(
+        `lower(province_name) LIKE '%${getProvinceArgs.query.toLowerCase()}%'`,
+      );
     }
 
     if (getProvinceArgs.startAt) {
