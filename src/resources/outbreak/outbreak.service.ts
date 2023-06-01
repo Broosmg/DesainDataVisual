@@ -59,12 +59,12 @@ export class OutbreakService {
   }
 
   async update(id: string, updateOutbreakInput: UpdateOutbreakInput) {
-    const provinceData = await this.outbreakRepository.preload({
+    const data = await this.outbreakRepository.preload({
       id: id,
       ...updateOutbreakInput,
     });
 
-    return this.outbreakRepository.save(provinceData);
+    return this.outbreakRepository.save(data);
   }
 
   remove(id: string) {

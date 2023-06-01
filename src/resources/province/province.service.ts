@@ -55,12 +55,12 @@ export class ProvinceService {
   }
 
   async update(id: number, updateProvinceInput: UpdateProvinceInput) {
-    const provinceData = await this.provinceRepository.preload({
+    const data = await this.provinceRepository.preload({
       id: id,
       ...updateProvinceInput,
     });
 
-    return this.provinceRepository.save(provinceData);
+    return this.provinceRepository.save(data);
   }
 
   remove(id: number) {

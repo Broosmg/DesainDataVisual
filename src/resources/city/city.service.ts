@@ -56,12 +56,12 @@ export class CityService {
   }
 
   async update(id: number, updateCityInput: UpdateCityInput) {
-    const provinceData = await this.cityRepository.preload({
+    const data = await this.cityRepository.preload({
       id: id,
       ...updateCityInput,
     });
 
-    return this.cityRepository.save(provinceData);
+    return this.cityRepository.save(data);
   }
 
   remove(id: number) {

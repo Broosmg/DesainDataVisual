@@ -53,12 +53,12 @@ export class LocationService {
   }
 
   async update(id: string, updateLocationInput: UpdateLocationInput) {
-    const provinceData = await this.locationRepository.preload({
+    const data = await this.locationRepository.preload({
       id: id,
       ...updateLocationInput,
     });
 
-    return this.locationRepository.save(provinceData);
+    return this.locationRepository.save(data);
   }
 
   remove(id: string) {

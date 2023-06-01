@@ -58,12 +58,12 @@ export class OutbreakCategoryService {
     id: string,
     updateOutbreakCategoryInput: UpdateOutbreakCategoryInput,
   ) {
-    const provinceData = await this.outbreakCategoryRepository.preload({
+    const data = await this.outbreakCategoryRepository.preload({
       id: id,
       ...updateOutbreakCategoryInput,
     });
 
-    return this.outbreakCategoryRepository.save(provinceData);
+    return this.outbreakCategoryRepository.save(data);
   }
 
   remove(id: string) {

@@ -59,12 +59,12 @@ export class DistrictService {
   }
 
   async update(id: number, updateDistrictInput: UpdateDistrictInput) {
-    const provinceData = await this.districtRepository.preload({
+    const data = await this.districtRepository.preload({
       id: id,
       ...updateDistrictInput,
     });
 
-    return this.districtRepository.save(provinceData);
+    return this.districtRepository.save(data);
   }
 
   remove(id: number) {
