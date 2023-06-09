@@ -57,14 +57,14 @@ export class DistrictResolver {
     return this.districtService.remove(id);
   }
 
-  @ResolveField(() => City)
-  city(@Parent() district: District) {
-    return this.cityService.findOne(district.cityId);
-  }
-
   @Query(() => Number, { name: 'countDistrict' })
   count(@Args() getDistrictArgs: GetDistrictArgs) {
     return this.districtService.findAll(getDistrictArgs, true);
+  }
+
+  @ResolveField(() => City)
+  city(@Parent() district: District) {
+    return this.cityService.findOne(district.cityId);
   }
 
   @ResolveField(() => [Location])
@@ -73,7 +73,7 @@ export class DistrictResolver {
     @Args() getLocationArgs: GetLocationArgs,
   ) {
     return this.locationService.findAll({
-      districtId: district.id,
+      districtId: district.id.toString(),
       query: getLocationArgs.query,
       startAt: getLocationArgs.startAt,
       endAt: getLocationArgs.endAt,

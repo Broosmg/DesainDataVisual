@@ -110,6 +110,7 @@
         outbreakCategoryId: [],
         outbreaks: [],
         outbreakCategories: [],
+        buildings: [],
         startAt: date.format('YYYY-MM-01'),
         endAt: date.endOf('month').format('YYYY-MM-DD')
       };
@@ -164,6 +165,7 @@
             name
           }
         }`;
+
         $.ajax({
           url: '/graphql',
           method: 'POST',
@@ -216,6 +218,7 @@
               name
             }
           }`;
+
           $.ajax({
             url: '/graphql',
             method: 'POST',
@@ -271,6 +274,7 @@
               name
             }
           }`;
+
           $.ajax({
             url: '/graphql',
             method: 'POST',
@@ -331,6 +335,8 @@
             }
           }
         }`;
+
+        generateBuilding();
         $.ajax({
           url: '/graphql',
           method: 'POST',
@@ -381,6 +387,54 @@
             }
 
             $('#cardBody').html(element);
+          }
+        });
+      }
+
+      function generateBuilding() {
+        const query = `query {
+          buildings(typeId: "38153748-e18c-4fcf-b825-f54322420d2c") {
+            name
+            latitude
+            longitude
+          }
+        }`;
+
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            internalData.buildings = data.data.buildings;
+            const color = '#1B9C85';
+            let element = '', markers = [];
+
+            map.eachLayer(function (layer) {
+              if (layer instanceof L.CircleMarker) {
+                map.removeLayer(layer);
+              }
+            });
+
+            for (const iterator1 of internalData.buildings) {
+              for (const iterator2 of iterator1.district.locations) {
+                markers.push({
+                  coords: [iterator2.latitude, iterator2.longitude],
+                  info: `${iterator1.name}`
+                });
+              }
+            }
+
+            markers.forEach(function(marker) {
+              const circleMarker = L.circleMarker(marker.coords, {
+                radius: 10
+              }).addTo(map);
+
+              circleMarker.bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
           }
         });
       }

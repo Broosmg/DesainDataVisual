@@ -29,7 +29,9 @@ export class CityService {
     }
 
     if (getCityArgs.provinceId) {
-      query.andWhere(`province_id in (${getCityArgs.provinceId})`);
+      query.andWhere(`province_id in (:...provinceId)`, {
+        provinceId: getCityArgs.provinceId.split(','),
+      });
     }
 
     if (getCityArgs.startAt) {

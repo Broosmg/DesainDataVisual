@@ -23,13 +23,15 @@ export class OutbreakService {
     const query = this.outbreakRepository.createQueryBuilder();
 
     if (getOutbreakArgs.outbreakCategoryId) {
-      query.andWhere(`outbreak_category_id in (:outbreakCategoryId)`, {
+      query.andWhere(`outbreak_category_id in (:...outbreakCategoryId)`, {
         outbreakCategoryId: getOutbreakArgs.outbreakCategoryId.split(','),
       });
     }
 
     if (getOutbreakArgs.districtId) {
-      query.andWhere(`district_id in (${getOutbreakArgs.districtId})`);
+      query.andWhere(`district_id in (:...districtId)`, {
+        districtId: getOutbreakArgs.districtId.split(','),
+      });
     }
 
     if (getOutbreakArgs.startAt) {

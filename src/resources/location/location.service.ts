@@ -23,7 +23,9 @@ export class LocationService {
     const query = this.locationRepository.createQueryBuilder();
 
     if (getLocationArgs.districtId) {
-      query.andWhere(`district_id in (${getLocationArgs.districtId})`);
+      query.andWhere(`district_id in (:...districtId)`, {
+        districtId: getLocationArgs.districtId.split(','),
+      });
     }
 
     if (getLocationArgs.startAt) {

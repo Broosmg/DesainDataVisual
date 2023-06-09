@@ -29,7 +29,9 @@ export class DistrictService {
     }
 
     if (getDistrictArgs.cityId) {
-      query.andWhere(`city_id in (${getDistrictArgs.cityId})`);
+      query.andWhere(`city_id in (:...cityId)`, {
+        cityId: getDistrictArgs.cityId.split(','),
+      });
     }
 
     if (getDistrictArgs.startAt) {
