@@ -336,6 +336,11 @@
           }
         }`;
 
+        map.eachLayer(function (layer) {
+          if (layer instanceof L.CircleMarker) {
+            map.removeLayer(layer);
+          }
+        });
         generateBuilding();
         $.ajax({
           url: '/graphql',
@@ -347,12 +352,6 @@
             internalData.outbreaks = data.data.outbreaks;
             const color = '#B70404';
             let element = '', markers = [];
-
-            map.eachLayer(function (layer) {
-              if (layer instanceof L.CircleMarker) {
-                map.removeLayer(layer);
-              }
-            });
 
             for (const iterator1 of internalData.outbreaks) {
               if (iterator1.sufferer == 0 && iterator1.dead == 0) {
@@ -376,6 +375,11 @@
 
               circleMarker.bindTooltip(marker.info, {
                 direction: 'top'
+              });
+
+              circleMarker.setStyle({
+                color: color,
+                fillColor: color
               });
             });
 
@@ -411,19 +415,11 @@
             const color = '#1B9C85';
             let element = '', markers = [];
 
-            map.eachLayer(function (layer) {
-              if (layer instanceof L.CircleMarker) {
-                map.removeLayer(layer);
-              }
-            });
-
-            for (const iterator1 of internalData.buildings) {
-              for (const iterator2 of iterator1.district.locations) {
-                markers.push({
-                  coords: [iterator2.latitude, iterator2.longitude],
-                  info: `${iterator1.name}`
-                });
-              }
+            for (const iterator of internalData.buildings) {
+              markers.push({
+                coords: [iterator.latitude, iterator.longitude],
+                info: `${iterator.name}`
+              });
             }
 
             markers.forEach(function(marker) {
@@ -433,6 +429,11 @@
 
               circleMarker.bindTooltip(marker.info, {
                 direction: 'top'
+              });
+
+              circleMarker.setStyle({
+                color: color,
+                fillColor: color
               });
             });
           }
