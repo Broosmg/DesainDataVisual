@@ -99,7 +99,7 @@
   <script>
     $(document).ready(function() {
       const header = {
-        'x-api-key': 'Bearer YXVsaWFpbm92YXNpQDEyMw=='
+        'x-api-key': 'YXVsaWFpbm92YXNpQDEyMw=='
       };
       const date = moment();
       const map = L.map('map').setView([-6.200000, 106.816666], 13);
@@ -375,11 +375,6 @@
 
               circleMarker.bindTooltip(marker.info, {
                 direction: 'top'
-              });
-
-              circleMarker.setStyle({
-                color: color,
-                fillColor: color
               });
             });
 
