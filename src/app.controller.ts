@@ -5,6 +5,6 @@ export class AppController {
   @Get()
   @Render('index')
   root() {
-    return { title: 'DRM' };
+    return { title: 'Outbreak Indicators' };
   }
 }

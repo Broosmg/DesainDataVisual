@@ -1,3 +1,6 @@
+import * as csv from 'csv-parser';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Outbreak1684742337036 implements MigrationInterface {
@@ -8,33 +11,24 @@ export class Outbreak1684742337036 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_id',
-            type: 'bigint',
+            type: 'uuid',
             isPrimary: true,
-            isGenerated: true,
-            generationStrategy: 'increment',
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'outbreak_category_id',
+            type: 'uuid',
+          },
+          {
+            name: 'sufferer',
             type: 'bigint',
           },
           {
-            name: 'outbreak_level_id',
+            name: 'dead',
             type: 'bigint',
           },
           {
-            name: 'latitude',
-            type: 'double precision',
-          },
-          {
-            name: 'longitude',
-            type: 'double precision',
-          },
-          {
-            name: 'radius',
-            type: 'double precision',
-          },
-          {
-            name: 'kelurahan_id',
+            name: 'district_id',
             type: 'bigint',
           },
           {
@@ -56,11 +50,24 @@ export class Outbreak1684742337036 implements MigrationInterface {
       }),
     );
     await queryRunner.query(
-      'CREATE INDEX outbreak_idx ON public.outbreak (outbreak_category_id, outbreak_level_id)',
+      'CREATE INDEX outbreak_idx ON outbreak (outbreak_category_id, district_id)',
     );
+    this.csvToDb(join(__dirname, '../../data/outbreak/dbd.csv'), queryRunner);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('outbreak');
+  }
+
+  private csvToDb(path: string, queryRunner: QueryRunner) {
+    createReadStream(path)
+      .pipe(csv())
+      .on('data', async (row: any) => {
+        if (row) {
+          await queryRunner.query(
+            `INSERT INTO outbreak (outbreak_category_id, sufferer, dead, district_id, created_at) VALUES ('${row.outbreak_category_id}', ${row.sufferer}, ${row.dead}, ${row.district_id}, '${row.created_at}')`,
+          );
+        }
+      });
   }
 }
