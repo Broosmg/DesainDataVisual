@@ -50,7 +50,11 @@ export class CityService {
       return query.getCount();
     }
 
-    return query.skip(getCityArgs.offset).take(getCityArgs.limit).getMany();
+    return query
+      .orderBy('created_at', 'DESC')
+      .skip(getCityArgs.offset)
+      .take(getCityArgs.limit)
+      .getMany();
   }
 
   findOne(id: number) {

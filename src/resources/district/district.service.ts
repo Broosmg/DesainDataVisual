@@ -51,6 +51,7 @@ export class DistrictService {
     }
 
     return query
+      .orderBy('created_at', 'DESC')
       .skip(getDistrictArgs.offset)
       .take(getDistrictArgs.limit)
       .getMany();
