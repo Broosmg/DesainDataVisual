@@ -45,6 +45,7 @@ export class LocationService {
     }
 
     return query
+      .orderBy('created_at', 'DESC')
       .skip(getLocationArgs.offset)
       .take(getLocationArgs.limit)
       .getMany();

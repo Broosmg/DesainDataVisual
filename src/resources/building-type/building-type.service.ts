@@ -45,6 +45,7 @@ export class BuildingTypeService {
     }
 
     return query
+      .orderBy('created_at', 'DESC')
       .skip(getBuildingTypeArgs.offset)
       .take(getBuildingTypeArgs.limit)
       .getMany();

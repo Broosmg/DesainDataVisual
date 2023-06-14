@@ -51,6 +51,7 @@ export class OutbreakService {
     }
 
     return query
+      .orderBy('created_at', 'DESC')
       .skip(getOutbreakArgs.offset)
       .take(getOutbreakArgs.limit)
       .getMany();

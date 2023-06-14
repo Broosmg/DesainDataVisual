@@ -45,6 +45,7 @@ export class ProvinceService {
     }
 
     return query
+      .orderBy('created_at', 'DESC')
       .skip(getProvinceArgs.offset)
       .take(getProvinceArgs.limit)
       .getMany();

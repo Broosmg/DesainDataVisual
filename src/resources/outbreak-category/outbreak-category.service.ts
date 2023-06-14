@@ -45,6 +45,7 @@ export class OutbreakCategoryService {
     }
 
     return query
+      .orderBy('created_at', 'DESC')
       .skip(getOutbreakCategoryArgs.offset)
       .take(getOutbreakCategoryArgs.limit)
       .getMany();
