@@ -1,4 +1,4 @@
-import { BaseInterface } from 'src/interfaces/base/base.interface';
+import { BaseInterface } from 'src/interface/base/base.interface';
 import { CreateBuildingInput } from './create-building.input';
 import { InputType, Field, PartialType } from '@nestjs/graphql';
 import { PrimaryGeneratedColumn } from 'typeorm';

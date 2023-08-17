@@ -1,4 +1,4 @@
-import { BaseInterface } from 'src/interfaces/base/base.interface';
+import { BaseInterface } from 'src/interface/base/base.interface';
 import { CreateOutbreakInput } from './create-outbreak.input';
 import { Field, InputType, PartialType } from '@nestjs/graphql';
 import { PrimaryGeneratedColumn } from 'typeorm';
