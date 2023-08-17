@@ -25,7 +25,7 @@ import { BuildingTypeModule } from './resources/building-type/building-type.modu
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: new ConfigService().get<string>('NODE_ENV') == 'development',
+      playground: new ConfigService().get('NODE_ENV') == 'development',
     }),
     CityModule,
     ProvinceModule,
