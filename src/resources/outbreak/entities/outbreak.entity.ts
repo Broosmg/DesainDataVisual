@@ -1,6 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { BaseEntity } from 'src/class/entities/base.entity/base.entity';
-import { BaseInterface } from 'src/interfaces/base/base.interface';
+import { BaseEntity } from 'src/classes/entities/base.entity/base.entity';
+import { BaseInterface } from 'src/interface/base/base.interface';
 import { District } from 'src/resources/district/entities/district.entity';
 import { OutbreakCategory } from 'src/resources/outbreak-category/entities/outbreak-category.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';

@@ -1,8 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { BaseInterface } from 'src/interfaces/base/base.interface';
+import { BaseEntity } from 'src/classes/entities/base.entity/base.entity';
+import { BaseInterface } from 'src/interface/base/base.interface';
 import { BuildingType } from 'src/resources/building-type/entities/building-type.entity';
 import { District } from 'src/resources/district/entities/district.entity';
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @ObjectType()
 @Entity({ name: 'building' })

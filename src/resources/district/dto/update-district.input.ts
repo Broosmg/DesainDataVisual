@@ -1,4 +1,4 @@
-import { BaseInterface } from 'src/interfaces/base/base.interface';
+import { BaseInterface } from 'src/interface/base/base.interface';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { CreateDistrictInput } from './create-district.input';
 import { Field, InputType, PartialType } from '@nestjs/graphql';
