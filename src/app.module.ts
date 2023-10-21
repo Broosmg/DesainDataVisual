@@ -12,8 +12,6 @@ import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-c
 import { DistrictModule } from './resources/district/district.module';
 import { SecurityMiddleware } from './middleware/security/security.middleware';
 import { LocationModule } from './resources/location/location.module';
-import { BuildingModule } from './resources/building/building.module';
-import { BuildingTypeModule } from './resources/building-type/building-type.module';
 
 @Module({
   imports: [
@@ -33,8 +31,6 @@ import { BuildingTypeModule } from './resources/building-type/building-type.modu
     OutbreakCategoryModule,
     DistrictModule,
     LocationModule,
-    BuildingModule,
-    BuildingTypeModule,
   ],
   controllers: [AppController],
 })

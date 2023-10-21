@@ -110,7 +110,6 @@
         outbreakCategoryId: [],
         outbreaks: [],
         outbreakCategories: [],
-        buildings: [],
         startAt: date.format('YYYY-MM-01'),
         endAt: date.endOf('month').format('YYYY-MM-DD')
       };
@@ -398,7 +397,6 @@
             map.removeLayer(layer);
           }
         });
-        generateBuilding();
         $.ajax({
           url: '/graphql',
           method: 'POST',
@@ -443,51 +441,6 @@
             }
 
             $('#cardBody').html(element);
-          }
-        });
-      }
-
-      function generateBuilding() {
-        const query = `query {
-          buildings(typeId: "38153748-e18c-4fcf-b825-f54322420d2c") {
-            name
-            latitude
-            longitude
-          }
-        }`;
-
-        $.ajax({
-          url: '/graphql',
-          method: 'POST',
-          contentType: 'application/json',
-          headers: header,
-          data: JSON.stringify({ query: query }),
-          success: function (data) {
-            internalData.buildings = data.data.buildings;
-            const color = '#1B9C85';
-            let element = '', markers = [];
-
-            for (const iterator of internalData.buildings) {
-              markers.push({
-                coords: [iterator.latitude, iterator.longitude],
-                info: `${iterator.name}`
-              });
-            }
-
-            markers.forEach(function (marker) {
-              const circleMarker = L.circleMarker(marker.coords, {
-                radius: 10
-              }).addTo(map);
-
-              circleMarker.bindTooltip(marker.info, {
-                direction: 'top'
-              });
-
-              circleMarker.setStyle({
-                color: color,
-                fillColor: color
-              });
-            });
           }
         });
       }
