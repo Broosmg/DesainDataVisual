@@ -110,7 +110,6 @@
         outbreakCategoryId: [],
         outbreaks: [],
         outbreakCategories: [],
-        buildings: [],
         startAt: date.format('YYYY-MM-01'),
         endAt: date.endOf('month').format('YYYY-MM-DD')
       };
@@ -118,6 +117,7 @@
       $('#startDate').val(moment(internalData.startAt).format('YYYY-MM'));
       $('#endDate').val(moment(internalData.startAt).format('YYYY-MM'));
       generatePin();
+      inariskData();
       outbreakCategories();
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -192,6 +192,62 @@
               $("#outbreakCategories").append(element);
               addClick(element);
             }
+          }
+        });
+      }
+
+      function inariskData() {
+        $.ajax({
+          url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
+          method: 'GET',
+          success: function (data) {
+            const markers = [];
+
+            for (const iterator of JSON.parse(data).features) {
+              markers.push({
+                coords: [iterator.geometry.y, iterator.geometry.x],
+                info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
+              });
+            }
+
+            markers.forEach(function (marker) {
+              L.marker(marker.coords, {
+                radius: 10,
+                icon: L.icon({
+                  iconUrl: 'image/hospital.svg',
+                  iconSize: [20, 20]
+                })
+              }).addTo(map).bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
+          }
+        });
+
+        $.ajax({
+          url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Puskesmas/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2C+desa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
+          method: 'GET',
+          success: function (data) {
+            const markers = [];
+
+            for (const iterator of JSON.parse(data).features) {
+              markers.push({
+                coords: [iterator.geometry.y, iterator.geometry.x],
+                info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
+              });
+            }
+
+            markers.forEach(function (marker) {
+              L.marker(marker.coords, {
+                radius: 10,
+                icon: L.icon({
+                  iconUrl: 'image/puskemas.svg',
+                  iconSize: [20, 20]
+                })
+              }).addTo(map).bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
           }
         });
       }
@@ -341,7 +397,6 @@
             map.removeLayer(layer);
           }
         });
-        generateBuilding();
         $.ajax({
           url: '/graphql',
           method: 'POST',
@@ -368,7 +423,7 @@
               }
             }
 
-            markers.forEach(function(marker) {
+            markers.forEach(function (marker) {
               const circleMarker = L.circleMarker(marker.coords, {
                 radius: 10
               }).addTo(map);
@@ -386,51 +441,6 @@
             }
 
             $('#cardBody').html(element);
-          }
-        });
-      }
-
-      function generateBuilding() {
-        const query = `query {
-          buildings(typeId: "38153748-e18c-4fcf-b825-f54322420d2c") {
-            name
-            latitude
-            longitude
-          }
-        }`;
-
-        $.ajax({
-          url: '/graphql',
-          method: 'POST',
-          contentType: 'application/json',
-          headers: header,
-          data: JSON.stringify({ query: query }),
-          success: function (data) {
-            internalData.buildings = data.data.buildings;
-            const color = '#1B9C85';
-            let element = '', markers = [];
-
-            for (const iterator of internalData.buildings) {
-              markers.push({
-                coords: [iterator.latitude, iterator.longitude],
-                info: `${iterator.name}`
-              });
-            }
-
-            markers.forEach(function(marker) {
-              const circleMarker = L.circleMarker(marker.coords, {
-                radius: 10
-              }).addTo(map);
-
-              circleMarker.bindTooltip(marker.info, {
-                direction: 'top'
-              });
-
-              circleMarker.setStyle({
-                color: color,
-                fillColor: color
-              });
-            });
           }
         });
       }
