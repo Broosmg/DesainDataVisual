@@ -52,6 +52,7 @@ export class Outbreak1684742337036 implements MigrationInterface {
     await queryRunner.query(
       'CREATE INDEX outbreak_idx ON outbreak (outbreak_category_id, district_id)',
     );
+    this.csvToDb(join(__dirname, '../../data/outbreak/covid.csv'), queryRunner);
     this.csvToDb(join(__dirname, '../../data/outbreak/dbd.csv'), queryRunner);
   }
 
