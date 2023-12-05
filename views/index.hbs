@@ -142,6 +142,7 @@
 
         generatePin();
       });
+      // akhir action handle tanggal
 
       // action handle tanggal akhir
       $('#endDate').change(function () {
@@ -149,6 +150,7 @@
 
         generatePin();
       });
+      // akhir action handle tanggal
 
       $('#myLoction').click(function () {
         if (navigator.geolocation) {
@@ -198,6 +200,7 @@
           }
         });
       }
+      // akhir function get data jenis penyakit
 
       // function get data inarisk
       function inariskData() {
@@ -227,6 +230,7 @@
             });
           }
         });
+        // akhir function get data inarisk
 
         $.ajax({
           url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Puskesmas/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2C+desa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
@@ -270,7 +274,7 @@
         });
       }
 
-      // trigger perubahan pada input city
+      // trigger perubahan pada input kota
       $('#city').autocomplete({
         source: function (request, response) {
           const query = `query {
@@ -326,6 +330,7 @@
           return false;
         }
       });
+      // akhir perubahan pada input kota
 
       // trigger perubahan pada input kecamatan
       $("#district").autocomplete({
@@ -378,6 +383,7 @@
           return false;
         }
       });
+      // akhir trigger perubahan pada input kecamatan
 
       function generatePin() {
         const query = `query {
