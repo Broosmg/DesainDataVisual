@@ -136,12 +136,14 @@
         $('#informationButton').removeClass('invisible');
       });
 
+      // action handle tanggal awal
       $('#startDate').change(function () {
         internalData.startAt = moment($(this).val()).format('YYYY-MM-DD');
 
         generatePin();
       });
 
+      // action handle tanggal akhir
       $('#endDate').change(function () {
         internalData.endAt = moment($(this).val()).endOf('month').format('YYYY-MM-DD');
 
@@ -158,6 +160,7 @@
         }
       });
 
+      // function get data jenis penyakit
       function outbreakCategories() {
         const query = `query {
           outbreakCategories {
@@ -196,6 +199,7 @@
         });
       }
 
+      // function get data inarisk
       function inariskData() {
         $.ajax({
           url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
@@ -266,6 +270,7 @@
         });
       }
 
+      // trigger perubahan pada input city
       $('#city').autocomplete({
         source: function (request, response) {
           const query = `query {
@@ -322,6 +327,7 @@
         }
       });
 
+      // trigger perubahan pada input kecamatan
       $("#district").autocomplete({
         source: function (request, response) {
           const query = `query {
