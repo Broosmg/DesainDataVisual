@@ -417,7 +417,6 @@
           data: JSON.stringify({ query: query }),
           success: function (data) {
             internalData.outbreaks = data.data.outbreaks;
-            const color = '#B70404';
             let element = '', markers = [];
 
             for (const iterator1 of internalData.outbreaks) {
@@ -430,14 +429,17 @@
                   coords: [iterator2.latitude, iterator2.longitude],
                   info: `${iterator1.district.name}<br>
                   Penderita: ${iterator1.sufferer}<br>
-                  Kematian: ${iterator1.dead}`
+                  Kematian: ${iterator1.dead}`,
+                  fillColor: getColor(iterator1.sufferer)
                 });
               }
             }
 
             markers.forEach(function (marker) {
               const circleMarker = L.circleMarker(marker.coords, {
-                radius: 10
+                radius: 10,
+                fillColor: marker.fillColor,
+                fillOpacity: 0.5
               }).addTo(map);
 
               circleMarker.bindTooltip(marker.info, {
@@ -457,6 +459,17 @@
         });
       }
     });
+
+    function getColor(value) {
+      value = parseInt(value);
+      let color = '#EB5353';
+
+      if (value <= 10) {
+        color = '#36AE7C'
+      } else if (value <= 50) {
+        color = '#F9D923'
+      }
+    }
 
     function changeKeyName(array, oldKeyName, newKeyName) {
       return array.map(obj => {
