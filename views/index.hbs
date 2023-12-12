@@ -49,8 +49,15 @@
   </style>
 </head>
 <body>
-    <div class="card py-4 px-5 position-fixed shadow index-top rounded-4 border-0" style="width: 450px; top: 20px; bottom: 20px; left: 20px;">
-      <h2 class="text-secondary-emphasis">{{ title }}</h2>
+    <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="filterButton" data-bs-toggle="tooltip" title="Filter Penyakit" style="top: 20px; left: 20px;">
+      <i class="fa-solid fa-filter"></i>
+    </button>
+
+    <div class="card p-4 position-fixed shadow index-top rounded-4 invisible border-0" id="filterCard" style="width: 450px; top: 20px; bottom: 20px; left: 20px;">
+      <div class="card-header border-0 bg-transparent">
+        <b>{{ title }}</b>
+        <button type="button" class="btn-close float-end" id="closeFilterCard"></button>
+      </div>
 
       <div class="container mt-4 overflow-y-auto">
         <div class="row mb-4 g-2" id="outbreakCategories"></div>
@@ -76,7 +83,7 @@
       <i class="fa-solid fa-circle-info"></i>
     </button>
 
-    <div class="card position-fixed shadow index-top invisible border-0" id="informationCard" style="top: 20px; right: 20px; width: 300px;">
+    <div class="card position-fixed shadow index-top invisible rounded-4 border-0" id="informationCard" style="top: 20px; right: 20px; width: 300px;">
       <div class="card-header">
         Informasi
         <button type="button" class="btn-close float-end" id="closeInformationCard"></button>
@@ -97,12 +104,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       const header = {
         'x-api-key': 'YXVsaWFpbm92YXNpQDEyMw=='
-      };
-      const date = moment();
-      const map = L.map('map').setView([-6.200000, 106.816666], 13);
+      },
+        date = moment(),
+        map = L.map('map').setView([-6.200000, 106.816666], 13),
+        radius = 15;
       let internalData = {
         provinceId: 31,
         cityId: [],
@@ -112,7 +120,8 @@
         outbreakCategories: [],
         startAt: date.format('YYYY-MM-01'),
         endAt: date.endOf('month').format('YYYY-MM-DD')
-      };
+      },
+        circleMarker = [];
 
       $('#startDate').val(moment(internalData.startAt).format('YYYY-MM'));
       $('#endDate').val(moment(internalData.startAt).format('YYYY-MM'));
@@ -136,17 +145,31 @@
         $('#informationButton').removeClass('invisible');
       });
 
+      $('#filterButton').click(function () {
+        $('#filterCard').removeClass('invisible');
+        $('#filterButton').addClass('invisible');
+      });
+
+      $('#closeFilterCard').click(function () {
+        $('#filterCard').addClass('invisible');
+        $('#filterButton').removeClass('invisible');
+      });
+
+      // action handle tanggal awal
       $('#startDate').change(function () {
         internalData.startAt = moment($(this).val()).format('YYYY-MM-DD');
 
         generatePin();
       });
+      // akhir action handle tanggal
 
+      // action handle tanggal akhir
       $('#endDate').change(function () {
         internalData.endAt = moment($(this).val()).endOf('month').format('YYYY-MM-DD');
 
         generatePin();
       });
+      // akhir action handle tanggal
 
       $('#myLoction').click(function () {
         if (navigator.geolocation) {
@@ -158,6 +181,7 @@
         }
       });
 
+      // function get data jenis penyakit
       function outbreakCategories() {
         const query = `query {
           outbreakCategories {
@@ -195,7 +219,9 @@
           }
         });
       }
+      // akhir function get data jenis penyakit
 
+      // function get data inarisk
       function inariskData() {
         $.ajax({
           url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
@@ -223,6 +249,7 @@
             });
           }
         });
+        // akhir function get data inarisk
 
         $.ajax({
           url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Puskesmas/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2C+desa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
@@ -266,6 +293,7 @@
         });
       }
 
+      // trigger perubahan pada input kota
       $('#city').autocomplete({
         source: function (request, response) {
           const query = `query {
@@ -296,7 +324,7 @@
             }
           });
         },
-        select: function(event, ui) {
+        select: function (event, ui) {
           const item = ui.item;
           const id = item.id;
           const element = $(`<div class="alert alert-primary alert-dismissible fade show my-3 rounded-4" role="alert" data-id="${id}">
@@ -321,7 +349,9 @@
           return false;
         }
       });
+      // akhir perubahan pada input kota
 
+      // trigger perubahan pada input kecamatan
       $("#district").autocomplete({
         source: function (request, response) {
           const query = `query {
@@ -352,7 +382,7 @@
             }
           });
         },
-        select: function(event, ui) {
+        select: function (event, ui) {
           const item = ui.item;
           const id = item.id;
           const element = $(`<div class="alert alert-primary alert-dismissible fade show my-3 rounded-4" role="alert" data-id="${id}">
@@ -372,6 +402,7 @@
           return false;
         }
       });
+      // akhir trigger perubahan pada input kecamatan
 
       function generatePin() {
         const query = `query {
@@ -405,7 +436,6 @@
           data: JSON.stringify({ query: query }),
           success: function (data) {
             internalData.outbreaks = data.data.outbreaks;
-            const color = '#B70404';
             let element = '', markers = [];
 
             for (const iterator1 of internalData.outbreaks) {
@@ -418,17 +448,20 @@
                   coords: [iterator2.latitude, iterator2.longitude],
                   info: `${iterator1.district.name}<br>
                   Penderita: ${iterator1.sufferer}<br>
-                  Kematian: ${iterator1.dead}`
+                  Kematian: ${iterator1.dead}`,
+                  fillColor: getColor(iterator1.sufferer)
                 });
               }
             }
 
-            markers.forEach(function (marker) {
-              const circleMarker = L.circleMarker(marker.coords, {
-                radius: 10
-              }).addTo(map);
-
-              circleMarker.bindTooltip(marker.info, {
+            markers.forEach(function (marker, index) {
+              circleMarker.push(L.circleMarker(marker.coords, {
+                radius: radius,
+                fillColor: marker.fillColor,
+                opacity: 0
+              }));
+              circleMarker[index].addTo(map);
+              circleMarker[index].bindTooltip(marker.info, {
                 direction: 'top'
               });
             });
@@ -444,7 +477,26 @@
           }
         });
       }
+
+      map.on('zoomend', function () {
+        circleMarker.forEach(function (value) {
+          value.setRadius(radius);
+        });
+      });
     });
+
+    function getColor(value) {
+      value = parseInt(value);
+      let color = '#EB5353';
+
+      if (value <= 10) {
+        color = '#36AE7C'
+      } else if (value <= 50) {
+        color = '#F9D923'
+      }
+
+      return color;
+    }
 
     function changeKeyName(array, oldKeyName, newKeyName) {
       return array.map(obj => {
