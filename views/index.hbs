@@ -97,12 +97,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       const header = {
         'x-api-key': 'YXVsaWFpbm92YXNpQDEyMw=='
-      };
-      const date = moment();
-      const map = L.map('map').setView([-6.200000, 106.816666], 13);
+      },
+        date = moment(),
+        map = L.map('map').setView([-6.200000, 106.816666], 13),
+        radius = 15;
       let internalData = {
         provinceId: 31,
         cityId: [],
@@ -112,7 +113,8 @@
         outbreakCategories: [],
         startAt: date.format('YYYY-MM-01'),
         endAt: date.endOf('month').format('YYYY-MM-DD')
-      };
+      },
+        circleMarker = [];
 
       $('#startDate').val(moment(internalData.startAt).format('YYYY-MM'));
       $('#endDate').val(moment(internalData.startAt).format('YYYY-MM'));
@@ -305,7 +307,7 @@
             }
           });
         },
-        select: function(event, ui) {
+        select: function (event, ui) {
           const item = ui.item;
           const id = item.id;
           const element = $(`<div class="alert alert-primary alert-dismissible fade show my-3 rounded-4" role="alert" data-id="${id}">
@@ -363,7 +365,7 @@
             }
           });
         },
-        select: function(event, ui) {
+        select: function (event, ui) {
           const item = ui.item;
           const id = item.id;
           const element = $(`<div class="alert alert-primary alert-dismissible fade show my-3 rounded-4" role="alert" data-id="${id}">
@@ -435,14 +437,14 @@
               }
             }
 
-            markers.forEach(function (marker) {
-              const circleMarker = L.circleMarker(marker.coords, {
-                radius: 10,
+            markers.forEach(function (marker, index) {
+              circleMarker.push(L.circleMarker(marker.coords, {
+                radius: radius,
                 fillColor: marker.fillColor,
-                fillOpacity: 0.5
-              }).addTo(map);
-
-              circleMarker.bindTooltip(marker.info, {
+                opacity: 0
+              }));
+              circleMarker[index].addTo(map);
+              circleMarker[index].bindTooltip(marker.info, {
                 direction: 'top'
               });
             });
@@ -458,6 +460,12 @@
           }
         });
       }
+
+      map.on('zoomend', function () {
+        circleMarker.forEach(function (value) {
+          value.setRadius(radius);
+        });
+      });
     });
 
     function getColor(value) {
@@ -469,6 +477,8 @@
       } else if (value <= 50) {
         color = '#F9D923'
       }
+
+      return color;
     }
 
     function changeKeyName(array, oldKeyName, newKeyName) {
