@@ -437,21 +437,39 @@
           success: function (data) {
             internalData.outbreaks = data.data.outbreaks;
             let element = '', markers = [];
+            const groupedData = internalData.outbreaks.reduce((result, item) => {
+              const key = item.district.name;
 
-            for (const iterator1 of internalData.outbreaks) {
-              if (iterator1.sufferer == 0 && iterator1.dead == 0) {
-                continue;
+              if (!result[key]) {
+                result[key] = [];
               }
 
-              for (const iterator2 of iterator1.district.locations) {
-                markers.push({
-                  coords: [iterator2.latitude, iterator2.longitude],
-                  info: `${iterator1.district.name}<br>
-                  Penderita: ${iterator1.sufferer}<br>
-                  Kematian: ${iterator1.dead}`,
-                  fillColor: getColor(iterator1.sufferer)
-                });
+              result[key].push(item);
+
+              return result;
+            }, {});
+
+            for (let index = 0; index < Object.keys(groupedData).length; index++) {
+              const elements = groupedData[Object.keys(groupedData)[index]]
+                element = elements[0],
+                locations = element.district.locations;
+              let sufferer = 0,
+                dead = 0;
+
+              for (const iterator of elements) {
+                sufferer += parseInt(iterator.sufferer);
+                dead += parseInt(iterator.dead);
               }
+
+              const location = locations[0];
+
+              markers.push({
+                coords: [location.latitude, location.longitude],
+                info: `${element.district.name}<br>
+                Penderita: ${sufferer}<br>
+                Kematian: ${dead}`,
+                fillColor: getColor(sufferer)
+              });
             }
 
             markers.forEach(function (marker, index) {
@@ -487,12 +505,12 @@
 
     function getColor(value) {
       value = parseInt(value);
-      let color = '#a52a2a';
+      let color = '#FF0000';
 
       if (value <= 10) {
-        color = '#0091e4'
+        color = '#0000FF'
       } else if (value <= 50) {
-        color = '#ffd966'
+        color = '#FFFF00'
       }
 
       return color;
