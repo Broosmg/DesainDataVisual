@@ -109,8 +109,7 @@
         'x-api-key': 'YXVsaWFpbm92YXNpQDEyMw=='
       },
         date = moment(),
-        map = L.map('map').setView([-6.200000, 106.816666], 13),
-        radius = 15;
+        map = L.map('map').setView([-6.200000, 106.816666], 13);
       let internalData = {
         provinceId: 31,
         cityId: [],
@@ -474,7 +473,7 @@
 
             markers.forEach(function (marker, index) {
               circleMarker.push(L.circleMarker(marker.coords, {
-                radius: radius,
+                radius: 20,
                 fillColor: marker.fillColor,
                 opacity: 0
               }));
@@ -495,12 +494,6 @@
           }
         });
       }
-
-      map.on('zoomend', function () {
-        circleMarker.forEach(function (value) {
-          value.setRadius(radius);
-        });
-      });
     });
 
     function getColor(value) {
