@@ -63,9 +63,9 @@ export class Outbreak1684742337036 implements MigrationInterface {
   private csvToDb(path: string, queryRunner: QueryRunner) {
     createReadStream(path)
       .pipe(csv())
-      .on('data', async (row: any) => {
+      .on('data', (row: any) => {
         if (row) {
-          await queryRunner.query(
+          queryRunner.query(
             `INSERT INTO outbreak (outbreak_category_id, sufferer, dead, district_id, created_at) VALUES ('${row.outbreak_category_id}', ${row.sufferer}, ${row.dead}, ${row.district_id}, '${row.created_at}')`,
           );
         }

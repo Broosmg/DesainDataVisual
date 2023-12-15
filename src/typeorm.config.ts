@@ -13,4 +13,10 @@ export const config: TypeOrmModuleOptions = {
   password: configService.get('DB_PASSWORD') || 'password',
   database: configService.get('DB_NAME') || 'your_database_name',
   entities: [join(__dirname, '**/*.entity.js')],
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 };

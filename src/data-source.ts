@@ -14,4 +14,10 @@ export const AppDataSource = new DataSource({
   password: configService.get('DB_PASSWORD') || 'password',
   database: configService.get('DB_NAME') || 'your_database_name',
   migrations: [join(__dirname, '../src/migrations/*.ts')],
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 });
