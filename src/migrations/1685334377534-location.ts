@@ -58,9 +58,9 @@ export class Location1685334377534 implements MigrationInterface {
   private csvToDb(path: string, queryRunner: QueryRunner) {
     createReadStream(path)
       .pipe(csv())
-      .on('data', async (row: any) => {
+      .on('data', (row: any) => {
         if (row) {
-          await queryRunner.query(
+          queryRunner.query(
             `INSERT INTO location (district_id, latitude, longitude) VALUES (${row.district_id}, ${row.latitude}, ${row.longitude})`,
           );
         }
