@@ -53,7 +53,7 @@
       <i class="fa-solid fa-filter"></i>
     </button>
 
-    <div class="card p-4 position-fixed shadow index-top rounded-4 invisible border-0" id="filterCard" style="width: 450px; top: 20px; bottom: 20px; left: 20px;">
+    <div class="card p-4 position-fixed shadow index-top rounded-4 invisible border-0" id="filterCard" style="width: 450px; top: 20px; bottom: 20px; left: 20px; z-index: 1000;">
       <div class="card-header border-0 bg-transparent">
         <b>{{ title }}</b>
         <button type="button" class="btn-close float-end" id="closeFilterCard"></button>
@@ -76,8 +76,8 @@
       </div>
     </div>
 
-    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="startDate" data-bs-toggle="tooltip" title="Cari dari Bulan" style="top: 20px; right: 245px; width: 150px;">
-    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="endDate" data-bs-toggle="tooltip" title="Cari sampai Bulan" style="top: 20px; right: 80px; width: 150px;">
+    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="startDate" data-bs-toggle="tooltip" title="Cari dari Bulan" style="top: 20px; right: 265px; width: 170px;">
+    <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="endDate" data-bs-toggle="tooltip" title="Cari sampai Bulan" style="top: 20px; right: 80px; width: 170px;">
 
     <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="informationButton" data-bs-toggle="tooltip" title="Informasi" style="top: 20px; right: 20px;">
       <i class="fa-solid fa-circle-info"></i>
@@ -95,6 +95,20 @@
     <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="myLoction" data-bs-toggle="tooltip" title="Lokasi saya" style="bottom: 20px; right: 20px;">
       <i class="fa-solid fa-location-crosshairs"></i>
     </button>
+
+    <div class="card position-fixed shadow index-top rounded-4 border-0" style="bottom: 20px; left: 20px;">
+      <div class="card-body row">
+        <div class="col-3">
+          <img src="image/puskemas.svg" style="height: 17px; width: 17px;">
+          <img src="image/hospital.svg" style="height: 20px; width: 20px;">
+        </div>
+
+        <div class="col">
+          Puskesmas<br>
+          Rumah sakit
+        </div>
+      </div>
+    </div>
 
     <div class="col" id="map" style="height: 100vh;"></div>
 
@@ -435,7 +449,7 @@
           data: JSON.stringify({ query: query }),
           success: function (data) {
             internalData.outbreaks = data.data.outbreaks;
-            let element = '', markers = [];
+            let template = '', markers = [];
             const groupedData = internalData.outbreaks.reduce((result, item) => {
               const key = item.district.name;
 
@@ -485,12 +499,12 @@
 
             for (const iterator of internalData.outbreakCategories) {
               const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
-              element += `<h5 class="card-title">${iterator.name}</h5>
+              template += `<h5 class="card-title">${iterator.name}</h5>
               <p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>
               <p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
             }
 
-            $('#cardBody').html(element);
+            $('#cardBody').html(template);
           }
         });
       }
