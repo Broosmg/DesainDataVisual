@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css">
+  <title>{{ title }}</title>
+  <style>
+    * {
+      outline: none;
+      box-shadow: none !important;
+    }
+    #outbreakCategories > div > div:hover {
+      background-color: #f8f9fa;
+    }
+    .leaflet-control-zoom {
+      display: none;
+    }
+    .index-top, .ui-menu {
+      z-index: 500;
+    }
+    .btn-light, .card {
+      background-color: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+    }
+    .btn-light:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    article input {
+      position: absolute;
+      width: 100%;
+      height: 102px;
+      opacity: 0;
+      cursor: pointer;
+    }
+    input[type=checkbox]:checked ~ div, input:focus {
+      --bs-border-opacity: 1;
+      border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+    }
+    .circle {
+      width: 25px;
+      height: 25px;
+    }
+  </style>
+</head>
+<body>
+  <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="filterButton" data-bs-toggle="tooltip" title="Filter Penyakit" style="top: 20px; left: 20px;">
+    <i class="fa-solid fa-filter"></i>
+  </button>
+
+  <div class="card p-4 position-fixed shadow index-top rounded-4 invisible border-0" id="filterCard" style="width: 450px; top: 20px; bottom: 20px; left: 20px; z-index: 1000;">
+    <div class="card-header border-0 bg-transparent">
+      <b>{{ title }}</b>
+      <button type="button" class="btn-close float-end" id="closeFilterCard"></button>
+    </div>
+
+    <div class="container mt-4 overflow-y-auto">
+      <div class="row mb-4 g-2" id="outbreakCategories"></div>
+
+      <div>
+        <hr>
+        <input type="search" class="form-control mt-4 rounded-4" id="city" placeholder="Cari kota...">
+        <div class="m-2 overflow-y-auto" id="cities" style="max-height: 300px;"></div>
+      </div>
+
+      <div class="d-none" id="districtPanel">
+        <hr>
+        <input type="search" class="form-control mt-4 rounded-4" id="district" placeholder="Cari kecamatan...">
+        <div class="m-2 overflow-y-auto" id="districts" style="max-height: 300px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="startDate" data-bs-toggle="tooltip" title="Cari dari Bulan" style="top: 20px; right: 265px; width: 170px;">
+  <input type="month" class="form-control position-fixed shadow index-top rounded-4 bg-light" id="endDate" data-bs-toggle="tooltip" title="Cari sampai Bulan" style="top: 20px; right: 80px; width: 170px;">
+
+  <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="informationButton" data-bs-toggle="tooltip" title="Informasi" style="top: 20px; right: 20px;">
+    <i class="fa-solid fa-circle-info"></i>
+  </button>
+
+  <div class="card position-fixed shadow index-top invisible rounded-4 border-0" id="informationCard" style="top: 20px; right: 20px; width: 300px;">
+    <div class="card-header">
+      Informasi
+      <button type="button" class="btn-close float-end" id="closeInformationCard"></button>
+    </div>
+
+    <div class="card-body" id="cardBody"></div>
+  </div>
+
+  <button type="button" class="btn btn-light rounded-circle position-fixed shadow index-top" id="myLoction" data-bs-toggle="tooltip" title="Lokasi saya" style="bottom: 20px; right: 20px;">
+    <i class="fa-solid fa-location-crosshairs"></i>
+  </button>
+
+  <div class="card position-fixed shadow index-top rounded-4 border-0" style="bottom: 20px; left: 20px;">
+    <div class="card-body row">
+      <div class="col-3">
+        <img src="image/puskemas.svg" style="height: 17px; width: 17px;">
+        <img src="image/hospital.svg" style="height: 20px; width: 20px;">
+      </div>
+
+      <div class="col">
+        Puskesmas<br>
+        Rumah sakit
+      </div>
+    </div>
+  </div>
+
+  <div class="col" id="map" style="height: 100vh;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const header = {
+        'x-api-key': 'YXVsaWFpbm92YXNpQDEyMw=='
+      },
+        date = moment(),
+        map = L.map('map').setView([-6.200000, 106.816666], 13);
+      let internalData = {
+        provinceId: 31,
+        cityId: [],
+        districtId: [],
+        outbreakCategoryId: [],
+        outbreaks: [],
+        outbreakCategories: [],
+        startAt: date.format('YYYY-MM-01'),
+        endAt: date.endOf('month').format('YYYY-MM-DD')
+      },
+        circleMarker = [];
+
+      $('#startDate').val(moment(internalData.startAt).format('YYYY-MM'));
+      $('#endDate').val(moment(internalData.startAt).format('YYYY-MM'));
+      generatePin();
+      inariskData();
+      outbreakCategories();
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18
+      }).addTo(map);
+
+      $('#informationButton').click(function () {
+        $('#informationCard').removeClass('invisible');
+        $('#informationButton').addClass('invisible');
+      });
+
+      $('#closeInformationCard').click(function () {
+        $('#informationCard').addClass('invisible');
+        $('#informationButton').removeClass('invisible');
+      });
+
+      $('#filterButton').click(function () {
+        $('#filterCard').removeClass('invisible');
+        $('#filterButton').addClass('invisible');
+      });
+
+      $('#closeFilterCard').click(function () {
+        $('#filterCard').addClass('invisible');
+        $('#filterButton').removeClass('invisible');
+      });
+
+      // action handle tanggal awal
+      $('#startDate').change(function () {
+        internalData.startAt = moment($(this).val()).format('YYYY-MM-DD');
+
+        generatePin();
+      });
+      // akhir action handle tanggal
+
+      // action handle tanggal akhir
+      $('#endDate').change(function () {
+        internalData.endAt = moment($(this).val()).endOf('month').format('YYYY-MM-DD');
+
+        generatePin();
+      });
+      // akhir action handle tanggal
+
+      $('#myLoction').click(function () {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (value) {
+            const coords = value.coords;
+
+            map.setView([coords.latitude, coords.latitude], 15);
+          });
+        }
+      });
+
+      // function get data jenis penyakit
+      function outbreakCategories() {
+        const query = `query {
+          outbreakCategories {
+            id
+            name
+          }
+        }`;
+
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            internalData.outbreakCategories = data.data.outbreakCategories;
+
+            generatePin();
+
+            for (const iterator of internalData.outbreakCategories) {
+              const element = $(`<div class="col">
+                <article>
+                  <input type="checkbox" id="category" data-id="${iterator.id}" value="${iterator.id}">
+                  <div class="rounded-4 border">
+                    <div class="card-body text-center">
+                      <small>${iterator.name}</small>
+                    </div>
+                  </div>
+                </article>
+              </div>`);
+
+              $("#outbreakCategories").append(element);
+              addClick(element);
+            }
+          }
+        });
+      }
+      // akhir function get data jenis penyakit
+
+      // function get data inarisk
+      function inariskData() {
+        $.ajax({
+          url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
+          method: 'GET',
+          success: function (data) {
+            const markers = [];
+
+            for (const iterator of JSON.parse(data).features) {
+              markers.push({
+                coords: [iterator.geometry.y, iterator.geometry.x],
+                info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
+              });
+            }
+
+            markers.forEach(function (marker) {
+              L.marker(marker.coords, {
+                radius: 10,
+                icon: L.icon({
+                  iconUrl: 'image/hospital.svg',
+                  iconSize: [20, 20]
+                })
+              }).addTo(map).bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
+          }
+        });
+        // akhir function get data inarisk
+
+        $.ajax({
+          url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Puskesmas/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2C+desa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
+          method: 'GET',
+          success: function (data) {
+            const markers = [];
+
+            for (const iterator of JSON.parse(data).features) {
+              markers.push({
+                coords: [iterator.geometry.y, iterator.geometry.x],
+                info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
+              });
+            }
+
+            markers.forEach(function (marker) {
+              L.marker(marker.coords, {
+                radius: 10,
+                icon: L.icon({
+                  iconUrl: 'image/puskemas.svg',
+                  iconSize: [20, 20]
+                })
+              }).addTo(map).bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
+          }
+        });
+      }
+
+      function addClick(element) {
+        $(element).click(function () {
+          const id = $(element).find('input').attr('value');
+
+          if (internalData.outbreakCategoryId.filter(value => value == id).length) {
+            internalData.outbreakCategoryId = internalData.outbreakCategoryId.filter(value => value != id);
+          } else {
+            internalData.outbreakCategoryId.push(id);
+          }
+
+          generatePin();
+        });
+      }
+
+      // trigger perubahan pada input kota
+      $('#city').autocomplete({
+        source: function (request, response) {
+          const query = `query {
+            cities(query: "${$("#city").val()}", provinceId: "31") {
+              id
+              name
+            }
+          }`;
+
+          $.ajax({
+            url: '/graphql',
+            method: 'POST',
+            contentType: 'application/json',
+            headers: header,
+            data: JSON.stringify({ query: query }),
+            success: function (data) {
+              const temp = [];
+
+              for (const iterator of data.data.cities) {
+                if (internalData.cityId.filter(value => value == iterator.id).length) {
+                  continue;
+                }
+
+                temp.push(iterator);
+              }
+
+              response(changeKeyName(temp.length ? temp : data.data.cities, 'name', 'label'));
+            }
+          });
+        },
+        select: function (event, ui) {
+          const item = ui.item;
+          const id = item.id;
+          const element = $(`<div class="alert alert-primary alert-dismissible fade show my-3 rounded-4" role="alert" data-id="${id}">
+            <small>${item.label}</small>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`);
+
+          internalData.cityId.push(id);
+          $("#city").val("");
+          $("#cities").append(element);
+          $("#districtPanel").removeClass("d-none");
+          $(element).click(function () {
+            internalData.cityId = internalData.cityId.filter(value => value != $(this).attr('data-id'));
+
+            if (!internalData.cityId.length) {
+              internalData.districtId = [];
+
+              $("#districtPanel").addClass("d-none");
+              generatePin();
+            }
+          });
+          return false;
+        }
+      });
+      // akhir perubahan pada input kota
+
+      // trigger perubahan pada input kecamatan
+      $("#district").autocomplete({
+        source: function (request, response) {
+          const query = `query {
+            districts(query: "${$("#district").val()}", cityId: "${internalData.cityId.join(',')}") {
+              id
+              name
+            }
+          }`;
+
+          $.ajax({
+            url: '/graphql',
+            method: 'POST',
+            contentType: 'application/json',
+            headers: header,
+            data: JSON.stringify({ query: query }),
+            success: function (data) {
+              const temp = [];
+
+              for (const iterator of data.data.districts) {
+                if (internalData.districtId.filter(value => value == iterator.id).length) {
+                  continue;
+                }
+
+                temp.push(iterator);
+              }
+
+              response(changeKeyName(temp.length ? temp : data.data.districts, 'name', 'label'));
+            }
+          });
+        },
+        select: function (event, ui) {
+          const item = ui.item;
+          const id = item.id;
+          const element = $(`<div class="alert alert-primary alert-dismissible fade show my-3 rounded-4" role="alert" data-id="${id}">
+            <small>${item.label}</small>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`);
+
+          internalData.districtId.push(id);
+          $("#district").val("");
+          $("#districts").append(element);
+          generatePin();
+          $(element).click(function () {
+            internalData.districtId = internalData.districtId.filter(value => value != $(this).attr('data-id'));
+
+            generatePin();
+          });
+          return false;
+        }
+      });
+      // akhir trigger perubahan pada input kecamatan
+
+      function generatePin() {
+        const query = `query {
+          outbreaks(districtId: "${internalData.districtId.join(',')}", outbreakCategoryId: "${internalData.outbreakCategoryId.join(',')}", startAt: "${internalData.startAt}", endAt: "${internalData.endAt}") {
+            outbreakCategory {
+              id
+              name
+            }
+            sufferer
+            dead
+            district {
+              name
+              locations {
+                latitude
+                longitude
+              }
+            }
+          }
+        }`;
+
+        map.eachLayer(function (layer) {
+          if (layer instanceof L.CircleMarker) {
+            map.removeLayer(layer);
+          }
+        });
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            internalData.outbreaks = data.data.outbreaks;
+            let template = '', markers = [];
+            const groupedData = internalData.outbreaks.reduce((result, item) => {
+              const key = item.district.name;
+
+              if (!result[key]) {
+                result[key] = [];
+              }
+
+              result[key].push(item);
+
+              return result;
+            }, {});
+
+            for (let index = 0; index < Object.keys(groupedData).length; index++) {
+              const elements = groupedData[Object.keys(groupedData)[index]]
+                element = elements[0],
+                locations = element.district.locations;
+              let sufferer = 0,
+                dead = 0;
+
+              for (const iterator of elements) {
+                sufferer += parseInt(iterator.sufferer);
+                dead += parseInt(iterator.dead);
+              }
+
+              const location = locations[0];
+
+              markers.push({
+                coords: [location.latitude, location.longitude],
+                info: `${element.district.name}<br>
+                Penderita: ${sufferer}<br>
+                Kematian: ${dead}`,
+                fillColor: getColor(sufferer)
+              });
+            }
+
+            markers.forEach(function (marker, index) {
+              circleMarker.push(L.circleMarker(marker.coords, {
+                radius: 20,
+                fillColor: marker.fillColor,
+                opacity: 0
+              }));
+              circleMarker[index].addTo(map);
+              circleMarker[index].bindTooltip(marker.info, {
+                direction: 'top'
+              });
+            });
+
+            for (const iterator of internalData.outbreakCategories) {
+              const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
+              template += `<h5 class="card-title">${iterator.name}</h5>
+              <p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>
+              <p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
+            }
+
+            $('#cardBody').html(template);
+          }
+        });
+      }
+    });
+
+    function getColor(value) {
+      value = parseInt(value);
+      let color = '#FF0000';
+
+      if (value <= 10) {
+        color = '#0000FF'
+      } else if (value <= 50) {
+        color = '#FFFF00'
+      }
+
+      return color;
+    }
+
+    function changeKeyName(array, oldKeyName, newKeyName) {
+      return array.map(obj => {
+        if (obj.hasOwnProperty(oldKeyName)) {
+          obj[newKeyName] = obj[oldKeyName];
+
+          delete obj[oldKeyName];
+        }
+
+        return obj;
+      });
+    }
+
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  </script>
+</body>
+</html>
