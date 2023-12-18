@@ -25,18 +25,18 @@
   <div id="dashboard" class="container grid">
     <div class="col p-2">
       <div class="card rounded-4 shadow border-0">
-        <div class="card-body">
-          <h5 class="card-title">Statistik Covid-19 Tahun ...</h5>
-          <canvas id="covid-chart" height="80"></canvas>
+        <div id="covid-chart" class="card-body">
+          <h5 class="card-title">Statistik Covid-19 Tahun <input type="number" class="border-0"></h5>
+          <canvas height="80"></canvas>
         </div>
       </div>
     </div>
 
     <div class="col p-2">
       <div class="card rounded-4 shadow border-0">
-        <div class="card-body">
-          <h5 class="card-title">Statistik DBD Tahun ...</h5>
-          <canvas id="dbd-chart" height="80"></canvas>
+        <div id="dbd-chart" class="card-body">
+          <h5 class="card-title">Statistik DBD Tahun <input type="number" class="border-0"></h5>
+          <canvas height="80"></canvas>
         </div>
       </div>
     </div>
@@ -46,6 +46,19 @@
         <div class="card rounded-4 shadow border-0">
           <div class="card-body">
             <h5 class="card-title">Top 10 kota terdampak Covid-19</h5>
+            
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Nama Kota</th>
+                  <th scope="col">Jumlah</th>
+                </tr>
+              </thead>
+
+              <tbody id="covid-table">
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -54,6 +67,19 @@
         <div class="card rounded-4 shadow border-0">
           <div class="card-body">
             <h5 class="card-title">Top 10 kota terdampak DBD</h5>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Nama Kota</th>
+                  <th scope="col">Jumlah</th>
+                </tr>
+              </thead>
+
+              <tbody id="dbd-table">
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -61,9 +87,9 @@
 
     <div class="col-lg-6 p-2">
       <div class="card rounded-4 shadow border-0">
-        <div class="card-body">
-          <h5 class="card-title">Besaran data Stunting</h5>
-          <canvas id="stunting-chart"></canvas>
+        <div id="stunting-chart" class="card-body">
+          <h5 class="card-title">Besaran data Stunting <input type="number" class="border-0"></h5>
+          <canvas></canvas>
         </div>
       </div>
     </div>
@@ -81,10 +107,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     $(document).ready(function () {
+      const header = {
+        'x-api-key': 'YXVsaWFpbm92YXNpQDEyMw=='
+      };
+      let canvas = {
+        '#covid-chart': null,
+        '#dbd-chart': null,
+        '#stunting-chart': null
+      };
+
       tabView(window.location.hash);
 
-      $('.navbar-brand, .nav-link').click(function () {
-        tabView($(this).attr('href'));
+      $(window).on('hashchange', function(e){
+        tabView(window.location.hash);
       });
 
       $('#map-link').on('dblclick', function () {
@@ -107,46 +142,95 @@
         }
       }
 
-      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      $('input[type=number]').val(new Date().getFullYear());
+      refreshCovid();
+      refreshDbd();
+      refreshStunting();
 
-      new Chart(document.getElementById('covid-chart').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: months,
-          datasets: [
-            {
-              label: "Bulan",
-              data: [65, 59, 80, 81, 56],
-            }
-          ]
-        }
+      $('#covid-chart').find('input').change(function () {
+        refreshCovid();
       });
 
-      new Chart(document.getElementById('dbd-chart').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: months,
-          datasets: [
-            {
-              label: "Bulan",
-              data: [65, 59, 80, 81, 56],
-            }
-          ]
-        }
+      $('#dbd-chart').find('input').change(function () {
+        refreshDbd();
+      });
+      $('#stunting-chart').find('input').change(function () {
+        refreshStunting();
       });
 
-      new Chart(document.getElementById('stunting-chart').getContext('2d'), {
-        type: 'pie',
-        data: {
-          labels: months,
-          datasets: [
-            {
-              label: "Bulan",
-              data: [65, 59, 80, 81, 56],
+      function refreshCovid() {
+        generateChart('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-chart', 'bar', $('#covid-chart').find('input').val());
+        generateTable('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-chart', $('#covid-chart').find('input').val());
+      }
+
+      function refreshDbd() {
+        generateChart('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-chart', 'bar', $('#dbd-chart').find('input').val());
+        generateTable('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-chart', $('#dbd-chart').find('input').val());
+      }
+
+      function refreshStunting() {
+        generateChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'pie', $('#stunting-chart').find('input').val());
+      }
+
+      function generateChart(outbreakCategoryId, elementId, chartType, year) {
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const query = `query Chart {
+          chart(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}") {
+            month
+            dead
+            sufferer
+          }
+        }`;
+
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            if (canvas && canvas[elementId]) {
+              canvas[elementId].data.datasets[0].data = data.data.chart.map(value => value.dead + value.sufferer);
+              canvas[elementId].update();
+              return;
             }
-          ]
-        }
-      });
+
+            $(elementId).find('input').val(year);
+            canvas[elementId] = new Chart($(elementId).find('canvas')[0].getContext('2d'), {
+              type: chartType,
+              data: {
+                labels: months,
+                datasets: [
+                  {
+                    label: "Bulan",
+                    data: data.data.chart.map(value => value.dead + value.sufferer),
+                  }
+                ]
+              }
+            });
+          }
+        });
+      }
+
+      function generateTable(outbreakCategoryId, elementId, year) {
+        const query = `query CityTop {
+          cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}") {
+            cityName
+            affected
+          }
+        }`;
+
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            console.log(data);
+          }
+        });
+      }
     });
 
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

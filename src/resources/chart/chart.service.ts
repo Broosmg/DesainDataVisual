@@ -3,6 +3,7 @@ import { GetChartArgs } from './dto/get-chart.args';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Outbreak } from '../outbreak/entities/outbreak.entity';
+import { GetCityTopArgs } from './dto/get-cityTop.args';
 
 @Injectable()
 export class ChartService {
@@ -29,6 +30,31 @@ export class ChartService {
     });
 
     query.groupBy('extract(month from created_at)');
+
+    return query.getRawMany();
+  }
+
+  cityTop(getCityTopArgs: GetCityTopArgs) {
+    const query = this.outbreakRepository.createQueryBuilder('o');
+
+    query.select('c.city_name', 'cityName');
+    query.addSelect('sum(o.dead + o.sufferer)', 'affected');
+
+    query.innerJoin('district', 'd', 'd.district_id = o.district_id');
+    query.innerJoin('city', 'c', 'c.city_id = d.city_id');
+
+    if (getCityTopArgs.outbreakCategoryId) {
+      query.andWhere(`o.outbreak_category_id in (:...outbreakCategoryId)`, {
+        outbreakCategoryId: getCityTopArgs.outbreakCategoryId.split(','),
+      });
+    }
+
+    query.andWhere(`extract(year from o.created_at) in (:...year)`, {
+      year: getCityTopArgs.year.split(','),
+    });
+
+    query.orderBy('affected', 'DESC');
+    query.groupBy('c.city_id');
 
     return query.getRawMany();
   }
