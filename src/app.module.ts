@@ -12,6 +12,7 @@ import { OutbreakCategoryModule } from './resources/outbreak-category/outbreak-c
 import { DistrictModule } from './resources/district/district.module';
 import { SecurityMiddleware } from './middleware/security/security.middleware';
 import { LocationModule } from './resources/location/location.module';
+import { ChartModule } from './resources/chart/chart.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LocationModule } from './resources/location/location.module';
     OutbreakCategoryModule,
     DistrictModule,
     LocationModule,
+    ChartModule,
   ],
   controllers: [AppController],
 })
