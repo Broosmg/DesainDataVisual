@@ -53,9 +53,10 @@ export class ChartService {
       year: getCityTopArgs.year.split(','),
     });
 
-    query.orderBy('affected', 'DESC');
-    query.groupBy('c.city_id');
-
-    return query.getRawMany();
+    return query
+      .orderBy('affected', 'DESC')
+      .take(10)
+      .groupBy('c.city_id')
+      .getRawMany();
   }
 }
