@@ -489,6 +489,7 @@
               circleMarker.push(L.circleMarker(marker.coords, {
                 radius: 20,
                 fillColor: marker.fillColor,
+                fillOpacity: .6,
                 opacity: 0
               }));
               circleMarker[index].addTo(map);
@@ -512,12 +513,12 @@
 
     function getColor(value) {
       value = parseInt(value);
-      let color = '#FF0000';
+      let color = '#f44336';
 
       if (value <= 10) {
-        color = '#0000FF'
+        color = '#4caf50'
       } else if (value <= 50) {
-        color = '#FFFF00'
+        color = '#ffeb3b'
       }
 
       return color;
