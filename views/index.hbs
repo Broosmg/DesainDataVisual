@@ -47,7 +47,7 @@
           <div class="card-body">
             <h5 class="card-title">Top 10 kota terdampak Covid-19</h5>
             
-            <table class="table">
+            <table id="covid-table" class="table">
               <thead>
                 <tr>
                   <th scope="col">No</th>
@@ -55,9 +55,6 @@
                   <th scope="col">Jumlah</th>
                 </tr>
               </thead>
-
-              <tbody id="covid-table">
-              </tbody>
             </table>
           </div>
         </div>
@@ -68,7 +65,7 @@
           <div class="card-body">
             <h5 class="card-title">Top 10 kota terdampak DBD</h5>
 
-            <table class="table">
+            <table id="dbd-table" class="table">
               <thead>
                 <tr>
                   <th scope="col">No</th>
@@ -76,9 +73,6 @@
                   <th scope="col">Jumlah</th>
                 </tr>
               </thead>
-
-              <tbody id="dbd-table">
-              </tbody>
             </table>
           </div>
         </div>
@@ -160,12 +154,12 @@
 
       function refreshCovid() {
         generateChart('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-chart', 'bar', $('#covid-chart').find('input').val());
-        generateTable('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-chart', $('#covid-chart').find('input').val());
+        generateTable('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-table', $('#covid-chart').find('input').val());
       }
 
       function refreshDbd() {
         generateChart('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-chart', 'bar', $('#dbd-chart').find('input').val());
-        generateTable('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-chart', $('#dbd-chart').find('input').val());
+        generateTable('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-table', $('#dbd-chart').find('input').val());
       }
 
       function refreshStunting() {
@@ -227,7 +221,19 @@
           headers: header,
           data: JSON.stringify({ query: query }),
           success: function (data) {
-            console.log(data);
+            const tableBody = $("<tbody>");
+
+            for (let index = 0; index < data.data.cityTop.length; index++) {
+              const element = data.data.cityTop[index];
+              const tableRow = $("<tr>");
+
+              tableRow.append(`<td>${index + 1}</td>`);
+              tableRow.append(`<td>${element.cityName}</td>`);
+              tableRow.append(`<td>${element.affected}</td>`);
+              tableBody.append(tableRow);
+            }
+
+            $(elementId).append(tableBody)
           }
         });
       }
