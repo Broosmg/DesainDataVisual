@@ -55,7 +55,7 @@ export class ChartService {
 
     return query
       .orderBy('affected', 'DESC')
-      .take(10)
+      .limit(getCityTopArgs.limit)
       .groupBy('c.city_id')
       .getRawMany();
   }

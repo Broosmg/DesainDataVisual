@@ -7,4 +7,7 @@ export class GetChartArgs {
 
   @Field()
   year: string;
+
+  @Field({ nullable: true })
+  limit: number;
 }
