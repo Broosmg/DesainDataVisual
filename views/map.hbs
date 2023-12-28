@@ -480,7 +480,8 @@
                 coords: [location.latitude, location.longitude],
                 info: `${element.district.name}<br>
                 Penderita: ${sufferer}<br>
-                Kematian: ${dead}`,
+                Kematian: ${dead}<br>
+                Faktor Resiko: ${getRisk(sufferer)}`,
                 fillColor: getColor(sufferer)
               });
             }
@@ -522,6 +523,19 @@
       }
 
       return color;
+    }
+
+    function getRisk(value) {
+      value = parseInt(value);
+      let risk = 'Bahaya';
+
+      if (value <= 10) {
+        risk = 'Aman'
+      } else if (value <= 50) {
+        risk = 'Waspada'
+      }
+
+      return risk;
     }
 
     function changeKeyName(array, oldKeyName, newKeyName) {
