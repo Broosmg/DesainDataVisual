@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.css">
   <title>{{ title }}</title>
   <style>
     * {
@@ -117,6 +118,7 @@
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
   <script>
     $(document).ready(function () {
       const header = {
@@ -234,19 +236,33 @@
       }
       // akhir function get data jenis penyakit
 
+      function errorHanlder(url, data) {
+        Swal.fire({
+          icon: "error",
+          title: "Inarisk API error",
+          text: data,
+          footer: `<a href="${url}" target="_blank">Why do I have this issue?</a>`
+        });
+      }
+
       // function get data inarisk
       function inariskData() {
+        const url = 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json';
         $.ajax({
-          url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
+          url: url,
           method: 'GET',
           success: function (data) {
             const markers = [];
 
-            for (const iterator of JSON.parse(data).features) {
-              markers.push({
-                coords: [iterator.geometry.y, iterator.geometry.x],
-                info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
-              });
+            try {
+              for (const iterator of JSON.parse(data).features) {
+                markers.push({
+                  coords: [iterator.geometry.y, iterator.geometry.x],
+                  info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
+                });
+              }
+            } catch (error) {
+              errorHanlder(url, data);
             }
 
             markers.forEach(function (marker) {
@@ -270,11 +286,15 @@
           success: function (data) {
             const markers = [];
 
-            for (const iterator of JSON.parse(data).features) {
-              markers.push({
-                coords: [iterator.geometry.y, iterator.geometry.x],
-                info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
-              });
+            try {
+              for (const iterator of JSON.parse(data).features) {
+                markers.push({
+                  coords: [iterator.geometry.y, iterator.geometry.x],
+                  info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
+                });
+              }
+            } catch (error) {
+              errorHanlder(url, data);
             }
 
             markers.forEach(function (marker) {

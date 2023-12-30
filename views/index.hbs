@@ -223,6 +223,8 @@
           success: function (data) {
             const tableBody = $("<tbody>");
 
+            $(elementId).find("tbody").empty();
+
             for (let index = 0; index < data.data.cityTop.length; index++) {
               const element = data.data.cityTop[index];
               const tableRow = $("<tr>");
@@ -233,7 +235,7 @@
               tableBody.append(tableRow);
             }
 
-            $(elementId).append(tableBody)
+            $(elementId).append(tableBody);
           }
         });
       }
