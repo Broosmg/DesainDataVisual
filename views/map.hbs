@@ -25,6 +25,7 @@
       z-index: 500;
     }
     .btn-light, .card {
+
       background-color: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(10px);
     }
@@ -44,8 +45,8 @@
       border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
     }
     .circle {
-      width: 25px;
-      height: 25px;
+      width: 20px;
+      height: 20px;
     }
   </style>
 </head>
@@ -97,14 +98,23 @@
     <i class="fa-solid fa-location-crosshairs"></i>
   </button>
 
-  <div class="card position-fixed shadow index-top rounded-4 border-0" style="bottom: 20px; left: 20px;">
+  <div class="card position-fixed shadow index-top rounded-4 border-0" id="legendaCard" style="bottom: 20px; left: 20px;">
     <div class="card-body row">
-      <div class="col-3">
-        <img src="image/puskemas.svg" style="height: 17px; width: 17px;">
-        <img src="image/hospital.svg" style="height: 20px; width: 20px;">
+      <div class="col-2">
+        <div class="circle rounded-circle mt-1" style="background-color: #4caf50;"></div>
+        <div class="circle rounded-circle mt-1" style="background-color: #ffeb3b;"></div>
+        <div class="circle rounded-circle mt-1" style="background-color: #f44336;"></div>
+
+        <div class="text-center">
+          <img src="image/puskemas.svg" style="height: 17px; width: 17px;">
+          <img src="image/hospital.svg" style="height: 20px; width: 20px;">
+        </div>
       </div>
 
       <div class="col">
+        Faktor resiko aman<br>
+        Faktor resiko waspada<br>
+        Faktor resiko bahaya<br>
         Puskesmas<br>
         Rumah sakit
       </div>
@@ -163,11 +173,13 @@
       $('#filterButton').click(function () {
         $('#filterCard').removeClass('invisible');
         $('#filterButton').addClass('invisible');
+        $('#legendaCard').addClass('invisible');
       });
 
       $('#closeFilterCard').click(function () {
         $('#filterCard').addClass('invisible');
         $('#filterButton').removeClass('invisible');
+        $('#legendaCard').removeClass('invisible');
       });
 
       // action handle tanggal awal
@@ -500,8 +512,7 @@
                 coords: [location.latitude, location.longitude],
                 info: `${element.district.name}<br>
                 Penderita: ${sufferer}<br>
-                Kematian: ${dead}<br>
-                Faktor Resiko: ${getRisk(sufferer)}`,
+                Kematian: ${dead}`,
                 fillColor: getColor(sufferer)
               });
             }
@@ -543,19 +554,6 @@
       }
 
       return color;
-    }
-
-    function getRisk(value) {
-      value = parseInt(value);
-      let risk = 'Bahaya';
-
-      if (value <= 10) {
-        risk = 'Aman'
-      } else if (value <= 50) {
-        risk = 'Waspada'
-      }
-
-      return risk;
     }
 
     function changeKeyName(array, oldKeyName, newKeyName) {
