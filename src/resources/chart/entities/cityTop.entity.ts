@@ -6,5 +6,8 @@ export class CityTop {
   cityName: string;
 
   @Field()
-  affected: number;
+  dead: number;
+
+  @Field()
+  sufferer: number;
 }

@@ -38,10 +38,11 @@ export class ChartService {
     const query = this.outbreakRepository.createQueryBuilder('o');
 
     query.select('c.city_name', 'cityName');
-    query.addSelect('sum(o.dead + o.sufferer)', 'affected');
+    query.addSelect('sum(o.dead)', 'dead');
+    query.addSelect('sum(o.sufferer)', 'sufferer');
 
     query.innerJoin('district', 'd', 'd.district_id = o.district_id');
-    query.innerJoin('city', 'c', 'c.city_id = d.city_id');
+    query.leftJoin('city', 'c', 'c.city_id = d.city_id');
 
     if (getCityTopArgs.outbreakCategoryId) {
       query.andWhere(`o.outbreak_category_id in (:...outbreakCategoryId)`, {
@@ -54,7 +55,7 @@ export class ChartService {
     });
 
     return query
-      .orderBy('affected', 'DESC')
+      .orderBy('MAX(o.dead) + MAX(o.sufferer)', 'DESC')
       .limit(getCityTopArgs.limit)
       .groupBy('c.city_id')
       .getRawMany();
