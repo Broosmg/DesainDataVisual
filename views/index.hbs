@@ -26,7 +26,7 @@
     <div class="col py-2">
       <div class="card rounded-4 shadow border-0">
         <div id="covid-chart" class="card-body">
-          <h5 class="card-title">Statistik Covid-19 Tahun <input type="number" class="border-0"></h5>
+          <h5 class="card-title">Statistik Covid-19 Tahun <input type="number" class="border-0 border-bottom"></h5>
           <canvas height="80"></canvas>
         </div>
       </div>
@@ -35,14 +35,14 @@
     <div class="col py-2">
       <div class="card rounded-4 shadow border-0">
         <div id="dbd-chart" class="card-body">
-          <h5 class="card-title">Statistik DBD Tahun <input type="number" class="border-0"></h5>
+          <h5 class="card-title">Statistik DBD Tahun <input type="number" class="border-0 border-bottom"></h5>
           <canvas height="80"></canvas>
         </div>
       </div>
     </div>
 
-    <div class="row px-2">
-      <div class="col-lg-6 p-2">
+    <div class="row">
+      <div class="col-lg-6 py-2">
         <div class="card rounded-4 shadow border-0">
           <div class="card-body">
             <h5 class="card-title">Top kota terdampak Covid-19</h5>
@@ -79,11 +79,31 @@
       </div>
     </div>
 
-    <div class="col-lg-6 py-2">
-      <div class="card rounded-4 shadow border-0">
-        <div id="stunting-chart" class="card-body">
-          <h5 class="card-title">Besaran data Stunting <input type="number" class="border-0"></h5>
-          <canvas></canvas>
+    <div class="row">
+      <div class="col-lg-6 py-2">
+        <div class="card rounded-4 shadow border-0">
+          <div id="stunting-chart" class="card-body">
+            <h5 class="card-title">Besaran data Stunting <input type="number" class="border-0 border-bottom"></h5>
+            <canvas></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 p-2">
+        <div class="card rounded-4 shadow border-0">
+          <div class="card-body">
+            <h5 class="card-title">Top kota terdampak Stunting</h5>
+
+            <table id="stunting-table" class="table">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Nama Kota</th>
+                  <th scope="col">Jumlah</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -164,6 +184,19 @@
 
       function refreshStunting() {
         generateChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'pie', $('#stunting-chart').find('input').val());
+        generateTable('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-table', $('#stunting-chart').find('input').val());
+      }
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function generateRandomColor() {
+        const red = getRandomInt(0, 255);
+        const green = getRandomInt(0, 255);
+        const blue = getRandomInt(0, 255);
+
+        return `rgb(${red}, ${green}, ${blue})`;
       }
 
       function generateChart(outbreakCategoryId, elementId, chartType, year) {
@@ -183,8 +216,13 @@
           headers: header,
           data: JSON.stringify({ query: query }),
           success: function (data) {
+            const chartData = data.data.chart.map(value => value.dead + value.sufferer);
+            const chartBackgroundColor = chartType == 'pie' ? data.data.chart.map(value => generateRandomColor()) : "rgb(173, 216, 230)";
+
             if (canvas && canvas[elementId]) {
-              canvas[elementId].data.datasets[0].data = data.data.chart.map(value => value.dead + value.sufferer);
+              canvas[elementId].data.datasets[0].data = chartData;
+              canvas[elementId].data.datasets[0].backgroundColor = chartBackgroundColor;
+
               canvas[elementId].update();
               return;
             }
@@ -197,7 +235,8 @@
                 datasets: [
                   {
                     label: "Bulan",
-                    data: data.data.chart.map(value => value.dead + value.sufferer),
+                    data: chartData,
+                    backgroundColor: chartBackgroundColor
                   }
                 ]
               }
@@ -208,7 +247,7 @@
 
       function generateTable(outbreakCategoryId, elementId, year) {
         const query = `query CityTop {
-          cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 3) {
+          cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
             cityName
             affected
           }
