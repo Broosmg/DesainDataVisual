@@ -104,11 +104,8 @@
         <div class="circle rounded-circle mt-1" style="background-color: #4caf50;"></div>
         <div class="circle rounded-circle mt-1" style="background-color: #ffeb3b;"></div>
         <div class="circle rounded-circle mt-1" style="background-color: #f44336;"></div>
-
-        <div class="text-center">
-          <img src="image/puskemas.svg" style="height: 17px; width: 17px;">
-          <img src="image/hospital.svg" style="height: 20px; width: 20px;">
-        </div>
+        <img src="image/puskemas.svg" style="height: 17px; width: 17px;">
+        <img src="image/hospital.svg" style="height: 20px; width: 20px;">
       </div>
 
       <div class="col">
@@ -512,7 +509,8 @@
                 coords: [location.latitude, location.longitude],
                 info: `${element.district.name}<br>
                 Penderita: ${sufferer}<br>
-                Kematian: ${dead}`,
+                Kematian: ${dead}<br>
+                ${location.latitude}, ${location.longitude}`,
                 fillColor: getColor(sufferer)
               });
             }

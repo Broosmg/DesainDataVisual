@@ -91,18 +91,9 @@
 
       <div class="col-lg-6 p-2">
         <div class="card rounded-4 shadow border-0">
-          <div class="card-body">
+          <div id="stunting-pie" class="card-body">
             <h5 class="card-title">Top kota terdampak Stunting</h5>
-
-            <table id="stunting-table" class="table">
-              <thead>
-                <tr>
-                  <th scope="col">No</th>
-                  <th scope="col">Nama Kota</th>
-                  <th scope="col">Jumlah</th>
-                </tr>
-              </thead>
-            </table>
+            <canvas></canvas>
           </div>
         </div>
       </div>
@@ -129,8 +120,10 @@
         '#dbd-chart': null,
         '#stunting-chart': null
       };
+      let cities = [];
 
       tabView(window.location.hash);
+      getDataCity(31);
 
       $(window).on('hashchange', function(e){
         tabView(window.location.hash);
@@ -173,18 +166,18 @@
       });
 
       function refreshCovid() {
-        generateChart('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-chart', 'bar', $('#covid-chart').find('input').val());
-        generateTable('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-table', $('#covid-chart').find('input').val());
+        getDataChart('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-chart', 'bar', $('#covid-chart').find('input').val());
+        getDataCityTop('e089ad6b-e03e-4ab5-8c6a-5ce65455e713', '#covid-table', $('#covid-chart').find('input').val());
       }
 
       function refreshDbd() {
-        generateChart('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-chart', 'bar', $('#dbd-chart').find('input').val());
-        generateTable('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-table', $('#dbd-chart').find('input').val());
+        getDataChart('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-chart', 'bar', $('#dbd-chart').find('input').val());
+        getDataCityTop('273ae965-761e-446e-b11c-310df7783a8a', '#dbd-table', $('#dbd-chart').find('input').val());
       }
 
       function refreshStunting() {
-        generateChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'pie', $('#stunting-chart').find('input').val());
-        generateTable('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-table', $('#stunting-chart').find('input').val());
+        getDataChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'pie', $('#stunting-chart').find('input').val());
+        getStuntingPie('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-pie', $('#stunting-chart').find('input').val());
       }
 
       function getRandomInt(min, max) {
@@ -199,7 +192,7 @@
         return `rgb(${red}, ${green}, ${blue})`;
       }
 
-      function generateChart(outbreakCategoryId, elementId, chartType, year) {
+      function getDataChart(outbreakCategoryId, elementId, chartType, year) {
         const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         const query = `query Chart {
           chart(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}") {
@@ -216,40 +209,44 @@
           headers: header,
           data: JSON.stringify({ query: query }),
           success: function (data) {
-            const chartData = data.data.chart.map(value => value.dead + value.sufferer);
-            const chartBackgroundColor = chartType == 'pie' ? data.data.chart.map(value => generateRandomColor()) : "rgb(173, 216, 230)";
-
-            if (canvas && canvas[elementId]) {
-              canvas[elementId].data.datasets[0].data = chartData;
-              canvas[elementId].data.datasets[0].backgroundColor = chartBackgroundColor;
-
-              canvas[elementId].update();
-              return;
-            }
-
             $(elementId).find('input').val(year);
-            canvas[elementId] = new Chart($(elementId).find('canvas')[0].getContext('2d'), {
-              type: chartType,
-              data: {
-                labels: months,
-                datasets: [
-                  {
-                    label: "Bulan",
-                    data: chartData,
-                    backgroundColor: chartBackgroundColor
-                  }
-                ]
-              }
-            });
+            generateChart(data.data.chart, elementId, chartType, months, "Bulan");
           }
         });
       }
 
-      function generateTable(outbreakCategoryId, elementId, year) {
-        const query = `query CityTop {
-          cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
-            cityName
-            affected
+      function generateChart(data, elementId, chartType, labels, label) {
+        const chartData = data.map(value => value.dead + value.sufferer);
+        const chartBackgroundColor = chartType == 'pie' ? data.map(value => generateRandomColor()) : "rgb(173, 216, 230)";
+
+        if (canvas && canvas[elementId]) {
+          canvas[elementId].data.labels = labels;
+          canvas[elementId].data.datasets[0].data = chartData;
+          canvas[elementId].data.datasets[0].backgroundColor = chartBackgroundColor;
+
+          canvas[elementId].update();
+          return;
+        }
+
+        canvas[elementId] = new Chart($(elementId).find('canvas')[0].getContext('2d'), {
+          type: chartType,
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: label,
+                data: chartData,
+                backgroundColor: chartBackgroundColor
+              }
+            ]
+          }
+        });
+      }
+
+      function getDataCity(provinceId) {
+        const query = `query City {
+          cities(provinceId: "${provinceId}") {
+            name
           }
         }`;
 
@@ -260,23 +257,69 @@
           headers: header,
           data: JSON.stringify({ query: query }),
           success: function (data) {
-            const tableBody = $("<tbody>");
-
-            $(elementId).find("tbody").empty();
-
-            for (let index = 0; index < data.data.cityTop.length; index++) {
-              const element = data.data.cityTop[index];
-              const tableRow = $("<tr>");
-
-              tableRow.append(`<td>${index + 1}</td>`);
-              tableRow.append(`<td>${element.cityName}</td>`);
-              tableRow.append(`<td>${element.affected}</td>`);
-              tableBody.append(tableRow);
-            }
-
-            $(elementId).append(tableBody);
+            cities = data.data.cities.map(value => value.name);
           }
         });
+      }
+
+      function getStuntingPie(outbreakCategoryId, elementId, year) {
+        const query = `query CityTop {
+          cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
+            cityName
+            dead
+            sufferer
+          }
+        }`;
+
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            generateChart(data.data.cityTop, elementId, 'pie', cities, 'Kota');
+          }
+        });
+      }
+
+      function getDataCityTop(outbreakCategoryId, elementId, year) {
+        const query = `query CityTop {
+          cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
+            cityName
+            dead
+            sufferer
+          }
+        }`;
+
+        $.ajax({
+          url: '/graphql',
+          method: 'POST',
+          contentType: 'application/json',
+          headers: header,
+          data: JSON.stringify({ query: query }),
+          success: function (data) {
+            generateTable(data.data.cityTop, elementId);
+          }
+        });
+      }
+
+      function generateTable(data, elementId) {
+        const tableBody = $("<tbody>");
+
+        $(elementId).find("tbody").empty();
+
+        for (let index = 0; index < data.length; index++) {
+          const element = data[index];
+          const tableRow = $("<tr>");
+
+          tableRow.append(`<td>${index + 1}</td>`);
+          tableRow.append(`<td>${element.cityName}</td>`);
+          tableRow.append(`<td>${element.dead + element.sufferer}</td>`);
+          tableBody.append(tableRow);
+        }
+
+        $(elementId).append(tableBody);
       }
     });
 
