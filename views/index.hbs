@@ -204,8 +204,25 @@
           headers: header,
           data: JSON.stringify({ query: query }),
           success: function (data) {
+            const chartDatas = [];
+
             $(elementId).find('input').val(year);
-            generateChart(data.data.chart, elementId, chartType, months, "Bulan");
+
+            for (let index = 0; index < 12; index++) {
+              let chartData = data.data.chart.find(value => (value.month - 1) == index);
+
+              if (!chartData) {
+                chartData = {
+                  month: 2,
+                  dead: 0,
+                  sufferer: 0
+                };
+              }
+
+              chartDatas.push(chartData);
+            }
+
+            generateChart(chartDatas, elementId, chartType, months, "Bulan");
           }
         });
       }
