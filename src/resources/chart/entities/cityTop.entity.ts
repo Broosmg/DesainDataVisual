@@ -10,4 +10,7 @@ export class CityTop {
 
   @Field()
   sufferer: number;
+
+  @Field()
+  affected: number;
 }
