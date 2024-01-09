@@ -228,7 +228,7 @@
       }
 
       function generateChart(data, elementId, chartType, labels, label) {
-        const chartData = data.map(value => value.dead + value.sufferer);
+        const chartData = data.map(value => value.affected);
         const chartBackgroundColor = chartType == 'pie' ? data.map(value => generateRandomColor()) : "rgb(173, 216, 230)";
 
         if (canvas && canvas[elementId]) {
@@ -301,8 +301,7 @@
         const query = `query CityTop {
           cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
             cityName
-            dead
-            sufferer
+            affected
           }
         }`;
 
@@ -329,7 +328,7 @@
 
           tableRow.append(`<td>${index + 1}</td>`);
           tableRow.append(`<td>${element.cityName}</td>`);
-          tableRow.append(`<td>${element.dead + element.sufferer}</td>`);
+          tableRow.append(`<td>${element.affected}</td>`);
           tableBody.append(tableRow);
         }
 

@@ -40,6 +40,7 @@ export class ChartService {
     query.select('c.city_name', 'cityName');
     query.addSelect('sum(o.dead)', 'dead');
     query.addSelect('sum(o.sufferer)', 'sufferer');
+    query.addSelect('sum(o.dead) + sum(o.sufferer)', 'affected');
 
     query.innerJoin('district', 'd', 'd.district_id = o.district_id');
     query.leftJoin('city', 'c', 'c.city_id = d.city_id');
@@ -55,7 +56,7 @@ export class ChartService {
     });
 
     return query
-      .orderBy('MAX(o.dead) + MAX(o.sufferer)', 'DESC')
+      .orderBy('affected', 'DESC')
       .limit(getCityTopArgs.limit)
       .groupBy('c.city_id')
       .getRawMany();
