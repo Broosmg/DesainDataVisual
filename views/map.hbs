@@ -40,7 +40,7 @@
       opacity: 0;
       cursor: pointer;
     }
-    input[type=checkbox]:checked ~ div, input:focus {
+    input[name=category]:checked ~ div, input:focus {
       --bs-border-opacity: 1;
       border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
     }
@@ -240,7 +240,7 @@
             for (const iterator of internalData.outbreakCategories) {
               const element = $(`<div class="col">
                 <article>
-                  <input type="checkbox" id="category" data-id="${iterator.id}" value="${iterator.id}">
+                  <input type="radio" name="category" data-id="${iterator.id}" value="${iterator.id}">
                   <div class="rounded-4 border">
                     <div class="card-body text-center">
                       <small>${iterator.name}</small>
