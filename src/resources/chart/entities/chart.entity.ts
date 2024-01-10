@@ -10,4 +10,7 @@ export class Chart {
 
   @Field()
   dead: number;
+
+  @Field()
+  affected: number;
 }
