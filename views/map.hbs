@@ -543,11 +543,15 @@
               });
             });
 
+            const categoryInput = $('input[name=category]:checked');
+
             for (const iterator of internalData.outbreakCategories) {
-              const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
-              template += `<h5 class="card-title">${iterator.name}</h5>
-              <p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>
-              <p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
+              if ((categoryInput.val() == iterator.id) || !categoryInput.val()) {
+                const data = internalData.outbreaks.filter(value => value.outbreakCategory.id == iterator.id);
+                template += `<h5 class="card-title">${iterator.name}</h5>
+                <p class="card-text">Penderita: ${data.map(value => value.sufferer).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>
+                <p class="card-text">Meninggal: ${data.map(value => value.dead).reduce((previousValue, currentValue) => previousValue + currentValue, 0)} orang</p>`;
+              }
             }
 
             $('#cardBody').html(template);
