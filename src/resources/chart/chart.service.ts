@@ -18,6 +18,7 @@ export class ChartService {
     query.select('extract(month from created_at)', 'month');
     query.addSelect('sum(dead)', 'dead');
     query.addSelect('sum(sufferer)', 'sufferer');
+    query.addSelect('sum(dead) + sum(sufferer)', 'affected');
 
     if (getChartArgs.outbreakCategoryId) {
       query.andWhere(`outbreak_category_id in (:...outbreakCategoryId)`, {

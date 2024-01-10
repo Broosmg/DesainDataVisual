@@ -192,8 +192,7 @@
         const query = `query Chart {
           chart(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}") {
             month
-            dead
-            sufferer
+            affected
           }
         }`;
 
@@ -214,8 +213,7 @@
               if (!chartData) {
                 chartData = {
                   month: 2,
-                  dead: 0,
-                  sufferer: 0
+                  affected: 0
                 };
               }
 
@@ -278,8 +276,7 @@
         const query = `query CityTop {
           cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
             cityName
-            dead
-            sufferer
+            affected
           }
         }`;
 
