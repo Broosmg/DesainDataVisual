@@ -41,12 +41,21 @@
       </div>
     </div>
 
+    <div class="col py-2">
+      <div class="card rounded-4 shadow border-0">
+        <div id="stunting-chart" class="card-body">
+          <h5 class="card-title">Statistik Stunting Tahun <input type="number" class="border-0 border-bottom"></h5>
+          <canvas height="80"></canvas>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
-      <div class="col-lg-6 py-2">
+      <div class="col-lg-6 py-4">
         <div class="card rounded-4 shadow border-0">
           <div class="card-body">
-            <h5 class="card-title">Top kota terdampak Covid-19</h5>
-            
+            <h5 class="card-title">Urutan kota paling banyak terdampak terdampak Covid-19</h5>
+
             <table id="covid-table" class="table">
               <thead>
                 <tr>
@@ -60,10 +69,10 @@
         </div>
       </div>
 
-      <div class="col-lg-6 p-2">
+      <div class="col-lg-6 py-4">
         <div class="card rounded-4 shadow border-0">
           <div class="card-body">
-            <h5 class="card-title">Top kota terdampak DBD</h5>
+            <h5 class="card-title">Urutan kota paling banyak terdampak terdampak DBD</h5>
 
             <table id="dbd-table" class="table">
               <thead>
@@ -79,22 +88,20 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-lg-6 py-2">
-        <div class="card rounded-4 shadow border-0">
-          <div id="stunting-chart" class="card-body">
-            <h5 class="card-title">Besaran data Stunting <input type="number" class="border-0 border-bottom"></h5>
-            <canvas></canvas>
-          </div>
-        </div>
-      </div>
+    <div class="col py-2">
+      <div class="card rounded-4 shadow border-0">
+        <div class="card-body">
+          <h5 class="card-title">Urutan kota paling banyak terdampak terdampak Stunting</h5>
 
-      <div class="col-lg-6 p-2">
-        <div class="card rounded-4 shadow border-0">
-          <div id="stunting-pie" class="card-body">
-            <h5 class="card-title">Top kota terdampak Stunting</h5>
-            <canvas></canvas>
-          </div>
+          <table id="stunting-table" class="table">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Nama Kota</th>
+                <th scope="col">Jumlah</th>
+              </tr>
+            </thead>
+          </table>
         </div>
       </div>
     </div>
@@ -175,8 +182,8 @@
       }
 
       function refreshStunting() {
-        getDataChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'pie', $('#stunting-chart').find('input').val());
-        getStuntingPie('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-pie', $('#stunting-chart').find('input').val());
+        getDataChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'bar', $('#stunting-chart').find('input').val());
+        getDataCityTop('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-table', $('#stunting-chart').find('input').val());
       }
 
       function generateRandomColor() {
@@ -226,8 +233,9 @@
       }
 
       function generateChart(data, elementId, chartType, labels, label) {
+        const isPie = chartType == 'pie';
         const chartData = data.map(value => value.affected);
-        const chartBackgroundColor = chartType == 'pie' ? data.map(value => generateRandomColor()) : "rgb(173, 216, 230)";
+        const chartBackgroundColor = isPie ? data.map(value => generateRandomColor()) : "rgb(173, 216, 230)"
 
         if (canvas && canvas[elementId]) {
           canvas[elementId].data.labels = labels;
@@ -249,8 +257,44 @@
                 backgroundColor: chartBackgroundColor
               }
             ]
-          }
+          },
+          options: chartType == 'pie' ? getPieOptions() : getTableOptions()
         });
+      }
+
+      function getTableOptions() {
+        return {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Bulan'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Jumlah'
+              }
+            }
+          }
+        };
+      }
+
+      function getPieOptions() {
+        return {
+          tooltips: {
+            enabled: false
+          },
+          plugins: {
+            datalabels: {
+              color: '#fff',
+              formatter: function (value, context) {
+                return context.chart.data.labels[context.dataIndex];
+              },
+            }
+          }
+        };
       }
 
       function getDataCity(provinceId) {
@@ -272,7 +316,7 @@
         });
       }
 
-      function getStuntingPie(outbreakCategoryId, elementId, year) {
+      function getDataPie(outbreakCategoryId, elementId, year) {
         const query = `query CityTop {
           cityTop(outbreakCategoryId: "${outbreakCategoryId}", year: "${year}", limit: 6) {
             cityName

@@ -25,7 +25,6 @@
       z-index: 500;
     }
     .btn-light, .card {
-
       background-color: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(10px);
     }
@@ -268,15 +267,16 @@
 
       // function get data inarisk
       function inariskData() {
-        const url = 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json';
+        const hospitalUrl = 'https://gis.bnpb.go.id/server/rest/services/Basemap/Rumah_sakit/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2Cdesa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json';
+
         $.ajax({
-          url: url,
+          url: hospitalUrl,
           method: 'GET',
           success: function (data) {
             const markers = [];
 
             try {
-              for (const iterator of JSON.parse(data).features) {
+              for (const iterator of data.features) {
                 markers.push({
                   coords: [iterator.geometry.y, iterator.geometry.x],
                   info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
@@ -301,14 +301,16 @@
         });
         // akhir function get data inarisk
 
+        const publicHealthCenterUrl = 'https://gis.bnpb.go.id/server/rest/services/Basemap/Puskesmas/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2C+desa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json'
+
         $.ajax({
-          url: 'https://inarisk1.bnpb.go.id:6443/arcgis/rest/services/Basemap/Puskesmas/MapServer/0/query?where=provinsi+%3D+%27DKI+JAKARTA%27&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=nama%2C+desa&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&returnTrueCurves=false&resultOffset=&resultRecordCount=&f=json',
+          url: publicHealthCenterUrl,
           method: 'GET',
           success: function (data) {
             const markers = [];
 
             try {
-              for (const iterator of JSON.parse(data).features) {
+              for (const iterator of data.features) {
                 markers.push({
                   coords: [iterator.geometry.y, iterator.geometry.x],
                   info: `${iterator.attributes.nama} (${iterator.attributes.desa})`
