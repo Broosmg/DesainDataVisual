@@ -2,7 +2,7 @@ import { Controller, Get, Render } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  private title = 'DVD';
+  private title = 'DVD (Desain Visualisasi Data)';
 
   @Get()
   @Render('index')
