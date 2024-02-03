@@ -61,7 +61,7 @@
                 <tr>
                   <th scope="col">No</th>
                   <th scope="col">Nama Kota</th>
-                  <th scope="col">Jumlah</th>
+                  <th scope="col" style="text-align: end;">Jumlah</th>
                 </tr>
               </thead>
             </table>
@@ -79,7 +79,7 @@
                 <tr>
                   <th scope="col">No</th>
                   <th scope="col">Nama Kota</th>
-                  <th scope="col">Jumlah</th>
+                  <th scope="col" style="text-align: end;">Jumlah</th>
                 </tr>
               </thead>
             </table>
@@ -98,7 +98,7 @@
               <tr>
                 <th scope="col">No</th>
                 <th scope="col">Nama Kota</th>
-                <th scope="col">Jumlah</th>
+                <th scope="col" style="text-align: end;">Jumlah</th>
               </tr>
             </thead>
           </table>
@@ -369,11 +369,15 @@
 
           tableRow.append(`<td>${index + 1}</td>`);
           tableRow.append(`<td>${element.cityName}</td>`);
-          tableRow.append(`<td>${element.affected}</td>`);
+          tableRow.append(`<td style="text-align: end;">${formatNumberWithCommas(element.affected)}</td>`);
           tableBody.append(tableRow);
         }
 
         $(elementId).append(tableBody);
+      }
+
+      function formatNumberWithCommas(input) {
+        return parseInt(input, 10).toLocaleString().replaceAll(',', '.');
       }
     });
 
