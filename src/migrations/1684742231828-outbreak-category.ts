@@ -15,6 +15,10 @@ export class OutbreakCategory1684742231828 implements MigrationInterface {
         id: 'e089ad6b-e03e-4ab5-8c6a-5ce65455e713',
         name: 'Covid-19',
       },
+      {
+        id: '75fcc9a4-3e65-4e35-a208-c761155458c0',
+        name: 'TB',
+      },
     ];
 
     await queryRunner.createTable(

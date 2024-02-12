@@ -58,6 +58,7 @@ export class Outbreak1684742337036 implements MigrationInterface {
       join(__dirname, '../../data/outbreak/stunting.csv'),
       queryRunner,
     );
+    this.csvToDb(join(__dirname, '../../data/outbreak/tb.csv'), queryRunner);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
