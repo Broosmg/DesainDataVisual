@@ -237,7 +237,7 @@
             generatePin();
 
             for (const iterator of internalData.outbreakCategories) {
-              const element = $(`<div class="col">
+              const element = $(`<div class="col" style="min-width: 100px;">
                 <article>
                   <input type="radio" name="category" data-id="${iterator.id}" value="${iterator.id}">
                   <div class="rounded-4 border">

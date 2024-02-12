@@ -50,6 +50,15 @@
       </div>
     </div>
 
+    <div class="col py-2">
+      <div class="card rounded-4 shadow border-0">
+        <div id="tb-chart" class="card-body">
+          <h5 class="card-title">Statistik TB Tahun <input type="number" class="border-0 border-bottom"></h5>
+          <canvas height="80"></canvas>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-lg-6 py-4">
         <div class="card rounded-4 shadow border-0">
@@ -88,20 +97,40 @@
       </div>
     </div>
 
-    <div class="col py-2">
-      <div class="card rounded-4 shadow border-0">
-        <div class="card-body">
-          <h5 class="card-title">Urutan kota paling banyak terdampak terdampak Stunting</h5>
+    <div class="row">
+      <div class="col-lg-6 py-4">
+        <div class="card rounded-4 shadow border-0">
+          <div class="card-body">
+            <h5 class="card-title">Urutan kota paling banyak terdampak terdampak Stunting</h5>
 
-          <table id="stunting-table" class="table">
-            <thead>
-              <tr>
-                <th scope="col">No</th>
-                <th scope="col">Nama Kota</th>
-                <th scope="col" style="text-align: end;">Jumlah</th>
-              </tr>
-            </thead>
-          </table>
+            <table id="stunting-table" class="table">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Nama Kota</th>
+                  <th scope="col" style="text-align: end;">Jumlah</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 py-4">
+        <div class="card rounded-4 shadow border-0">
+          <div class="card-body">
+            <h5 class="card-title">Urutan kota paling banyak terdampak terdampak Stunting</h5>
+
+            <table id="tb-table" class="table">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Nama Kota</th>
+                  <th scope="col" style="text-align: end;">Jumlah</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -159,6 +188,7 @@
       refreshCovid();
       refreshDbd();
       refreshStunting();
+      refreshTb();
 
       $('#covid-chart').find('input').change(function () {
         refreshCovid();
@@ -167,8 +197,13 @@
       $('#dbd-chart').find('input').change(function () {
         refreshDbd();
       });
+
       $('#stunting-chart').find('input').change(function () {
         refreshStunting();
+      });
+
+      $('#tb-chart').find('input').change(function () {
+        refreshTb();
       });
 
       function refreshCovid() {
@@ -184,6 +219,11 @@
       function refreshStunting() {
         getDataChart('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-chart', 'bar', $('#stunting-chart').find('input').val());
         getDataCityTop('625b981a-09ea-4328-bd2c-4295df14e932', '#stunting-table', $('#stunting-chart').find('input').val());
+      }
+
+      function refreshTb() {
+        getDataChart('75fcc9a4-3e65-4e35-a208-c761155458c0', '#tb-chart', 'bar', $('#tb-chart').find('input').val());
+        getDataCityTop('75fcc9a4-3e65-4e35-a208-c761155458c0', '#tb-table', $('#tb-chart').find('input').val());
       }
 
       function generateRandomColor() {
