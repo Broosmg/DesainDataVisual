@@ -19,8 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:run": "yarn typeorm migration:run -d src/data-source.postgre.ts",
-    "postgre:migration:run": "yarn typeorm migration:run -d src/data-source.postgre.ts",
+    "migration:run": "yarn typeorm migration:run -d src/data-source.postgres.ts",
+    "postgres:migration:run": "yarn typeorm migration:run -d src/data-source.postgres.ts",
     "mysql:migration:run": "yarn typeorm migration:run -d src/data-source.mysql.ts"
   },
   "dependencies": {
