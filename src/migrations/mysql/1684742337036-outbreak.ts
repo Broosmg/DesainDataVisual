@@ -1,23 +1,25 @@
+import { randomUUID } from 'crypto';
 import * as csv from 'csv-parser';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Outbreak1684742337036 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner) {
     await queryRunner.createTable(
       new Table({
         name: 'outbreak',
         columns: [
           {
             name: 'outbreak_id',
-            type: 'uuid',
+            type: 'binary',
+            length: '36',
             isPrimary: true,
-            default: 'uuid_generate_v4()',
           },
           {
             name: 'outbreak_category_id',
-            type: 'uuid',
+            type: 'binary',
+            length: '36',
           },
           {
             name: 'sufferer',
@@ -49,19 +51,22 @@ export class Outbreak1684742337036 implements MigrationInterface {
         ],
       }),
     );
-    await queryRunner.query(
-      'CREATE INDEX outbreak_idx ON outbreak (outbreak_category_id, district_id)',
-    );
-    this.csvToDb(join(__dirname, '../../data/outbreak/covid.csv'), queryRunner);
-    this.csvToDb(join(__dirname, '../../data/outbreak/dbd.csv'), queryRunner);
     this.csvToDb(
-      join(__dirname, '../../data/outbreak/stunting.csv'),
+      join(__dirname, '../../../data/outbreak/covid.csv'),
       queryRunner,
     );
-    this.csvToDb(join(__dirname, '../../data/outbreak/tb.csv'), queryRunner);
+    this.csvToDb(
+      join(__dirname, '../../../data/outbreak/dbd.csv'),
+      queryRunner,
+    );
+    this.csvToDb(
+      join(__dirname, '../../../data/outbreak/stunting.csv'),
+      queryRunner,
+    );
+    this.csvToDb(join(__dirname, '../../../data/outbreak/tb.csv'), queryRunner);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('outbreak');
   }
 
@@ -71,7 +76,11 @@ export class Outbreak1684742337036 implements MigrationInterface {
       .on('data', (row: any) => {
         if (row) {
           queryRunner.query(
-            `INSERT INTO outbreak (outbreak_category_id, sufferer, dead, district_id, created_at) VALUES ('${row.outbreak_category_id}', ${row.sufferer}, ${row.dead}, ${row.district_id}, '${row.created_at}')`,
+            `INSERT INTO outbreak (outbreak_id, outbreak_category_id, sufferer, dead, district_id, created_at) VALUES ('${randomUUID()}', '${
+              row.outbreak_category_id
+            }', ${row.sufferer}, ${row.dead}, ${row.district_id}, '${
+              row.created_at
+            }')`,
           );
         }
       });

@@ -1,5 +1,12 @@
+import { ConfigService } from '@nestjs/config';
 import { InputType, Field } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
+import 'dotenv/config';
+
+const coordinateType =
+  (new ConfigService().get('DB_ENGINE') || 'postgre') == 'postgre'
+    ? 'double precision'
+    : 'double';
 
 @InputType()
 @Entity({ name: 'location' })
@@ -9,10 +16,10 @@ export class CreateLocationInput {
   districtId: number;
 
   @Field()
-  @Column({ type: 'double precision' })
+  @Column({ type: coordinateType })
   latitude: number;
 
   @Field()
-  @Column({ type: 'double precision' })
+  @Column({ type: coordinateType })
   longitude: number;
 }

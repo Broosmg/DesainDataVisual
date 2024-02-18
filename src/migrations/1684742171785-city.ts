@@ -3,7 +3,7 @@ import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class City1684742171785 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner) {
     await queryRunner.createTable(
       new Table({
         name: 'city',
@@ -41,15 +41,13 @@ export class City1684742171785 implements MigrationInterface {
         ],
       }),
     );
-    await queryRunner.query(
-      'CREATE INDEX city_idx ON city (city_name, province_id)',
-    );
+    await queryRunner.query('CREATE INDEX city_idx ON city (city_name)');
     await queryRunner.query(
       readFileSync(join(__dirname, '../../data/city.sql')).toString(),
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('city');
   }
 }

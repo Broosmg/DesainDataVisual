@@ -3,7 +3,7 @@ import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class District1684742345501 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner) {
     await queryRunner.createTable(
       new Table({
         name: 'district',
@@ -49,7 +49,7 @@ export class District1684742345501 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('district');
   }
 }
