@@ -4,7 +4,7 @@ import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Location1685334377534 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner) {
     await queryRunner.createTable(
       new Table({
         name: 'location',
@@ -45,13 +45,10 @@ export class Location1685334377534 implements MigrationInterface {
         ],
       }),
     );
-    await queryRunner.query(
-      'CREATE INDEX location_idx ON location (district_id)',
-    );
-    this.csvToDb(join(__dirname, '../../data/location.csv'), queryRunner);
+    this.csvToDb(join(__dirname, '../../../data/location.csv'), queryRunner);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('location');
   }
 

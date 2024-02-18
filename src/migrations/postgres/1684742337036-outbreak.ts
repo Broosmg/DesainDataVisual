@@ -4,7 +4,7 @@ import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Outbreak1684742337036 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner) {
     await queryRunner.createTable(
       new Table({
         name: 'outbreak',
@@ -49,19 +49,22 @@ export class Outbreak1684742337036 implements MigrationInterface {
         ],
       }),
     );
-    await queryRunner.query(
-      'CREATE INDEX outbreak_idx ON outbreak (outbreak_category_id, district_id)',
-    );
-    this.csvToDb(join(__dirname, '../../data/outbreak/covid.csv'), queryRunner);
-    this.csvToDb(join(__dirname, '../../data/outbreak/dbd.csv'), queryRunner);
     this.csvToDb(
-      join(__dirname, '../../data/outbreak/stunting.csv'),
+      join(__dirname, '../../../data/outbreak/covid.csv'),
       queryRunner,
     );
-    this.csvToDb(join(__dirname, '../../data/outbreak/tb.csv'), queryRunner);
+    this.csvToDb(
+      join(__dirname, '../../../data/outbreak/dbd.csv'),
+      queryRunner,
+    );
+    this.csvToDb(
+      join(__dirname, '../../../data/outbreak/stunting.csv'),
+      queryRunner,
+    );
+    this.csvToDb(join(__dirname, '../../../data/outbreak/tb.csv'), queryRunner);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('outbreak');
   }
 

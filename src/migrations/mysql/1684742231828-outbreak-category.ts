@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class OutbreakCategory1684742231828 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {
+  public async up(queryRunner: QueryRunner) {
     const categories = [
       {
         id: '273ae965-761e-446e-b11c-310df7783a8a',
@@ -65,7 +65,7 @@ export class OutbreakCategory1684742231828 implements MigrationInterface {
     }
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('outbreak_category');
   }
 }
