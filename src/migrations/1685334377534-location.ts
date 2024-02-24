@@ -11,9 +11,10 @@ export class Location1685334377534 implements MigrationInterface {
         columns: [
           {
             name: 'location_id',
-            type: 'binary',
-            length: '36',
+            type: 'bigint',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'district_id',
@@ -45,7 +46,7 @@ export class Location1685334377534 implements MigrationInterface {
         ],
       }),
     );
-    this.csvToDb(join(__dirname, '../../../data/location.csv'), queryRunner);
+    this.csvToDb(join(__dirname, '../../data/location.csv'), queryRunner);
   }
 
   public async down(queryRunner: QueryRunner) {

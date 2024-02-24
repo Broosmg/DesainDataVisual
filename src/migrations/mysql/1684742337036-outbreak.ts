@@ -12,13 +12,13 @@ export class Outbreak1684742337036 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_id',
-            type: 'binary',
+            type: 'varchar',
             length: '36',
             isPrimary: true,
           },
           {
             name: 'outbreak_category_id',
-            type: 'binary',
+            type: 'varchar',
             length: '36',
           },
           {

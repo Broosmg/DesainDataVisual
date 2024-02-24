@@ -27,7 +27,7 @@ export class OutbreakCategory1684742231828 implements MigrationInterface {
         columns: [
           {
             name: 'outbreak_category_id',
-            type: 'binary',
+            type: 'varchar',
             length: '36',
             isPrimary: true,
           },

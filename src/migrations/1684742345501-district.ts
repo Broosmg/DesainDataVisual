@@ -1,4 +1,5 @@
-import { readFileSync } from 'fs';
+import * as csv from 'csv-parser';
+import { createReadStream } from 'fs';
 import { join } from 'path';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
@@ -13,6 +14,7 @@ export class District1684742345501 implements MigrationInterface {
             type: 'bigint',
             isPrimary: true,
             isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'city_id',
@@ -44,12 +46,22 @@ export class District1684742345501 implements MigrationInterface {
     await queryRunner.query(
       'CREATE INDEX district_idx ON district (district_name, city_id)',
     );
-    await queryRunner.query(
-      readFileSync(join(__dirname, '../../data/district.sql')).toString(),
-    );
+    this.csvToDb(join(__dirname, '../../data/district.csv'), queryRunner);
   }
 
   public async down(queryRunner: QueryRunner) {
     await queryRunner.dropTable('district');
+  }
+
+  private csvToDb(path: string, queryRunner: QueryRunner) {
+    createReadStream(path)
+      .pipe(csv())
+      .on('data', (row: any) => {
+        if (row) {
+          queryRunner.query(
+            `INSERT INTO district (district_id, city_id, district_name) VALUES (${row.district_id}, ${row.city_id}, '${row.district_name}')`,
+          );
+        }
+      });
   }
 }
