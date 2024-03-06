@@ -21,6 +21,6 @@
     </style>
 </head>
 <body>
-    <iframe src="https://outbreak-indicators.onrender.com" id="fullscreen-iframe"></iframe>    
+    <iframe src="https://outbreak-indicators.onrender.com" id="fullscreen-iframe"></iframe>
 </body>
 </html>
