@@ -35,6 +35,7 @@ import { ChartModule } from './resources/chart/chart.module';
     ChartModule,
   ],
   controllers: [AppController],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
