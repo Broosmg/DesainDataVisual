@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 
 describe('AppController', () => {
   let appController: AppController;
+  const title = 'DVD (Desain Visualisasi Data)';
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -13,8 +14,20 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.root()).toBe('Hello World!');
+    it('should return title in object', () => {
+      expect(appController.root()).toBe({ title: title });
+    });
+  });
+
+  describe('map', () => {
+    it('should return title in object', () => {
+      expect(appController.root()).toBe({ title: title });
+    });
+  });
+
+  describe('healthCheck', () => {
+    it('should return result is true', () => {
+      expect(appController.healthCheck()).toBe({ result: true });
     });
   });
 });
