@@ -15,4 +15,9 @@ export class AppController {
   map() {
     return { title: this.title };
   }
+
+  @Get('healthCheck')
+  healthCheck() {
+    return { result: true };
+  }
 }
