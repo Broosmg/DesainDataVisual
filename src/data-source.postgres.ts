@@ -17,10 +17,10 @@ export const AppDataSource = new DataSource({
     join(__dirname, '../src/migrations/*.ts'),
     join(__dirname, '../src/migrations/postgres/*.ts'),
   ],
-  ssl: true,
-  extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
+  // ssl: true,
+  // extra: {
+  //   ssl: {
+  //     rejectUnauthorized: false,
+  //   },
+  // },
 });
