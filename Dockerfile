@@ -1,12 +1,7 @@
-FROM node:lts-alpine
-
-WORKDIR /var/www/outbreak-indicators
-
+FROM node:20.9.0-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
 COPY . .
-
-RUN yarn && \
-    yarn build && \
-    rm -rf node_modules && \
-    yarn --production
-
-CMD ["yarn", "start:prod"]
+EXPOSE 8080
+CMD ["npm", "run", "start"]
